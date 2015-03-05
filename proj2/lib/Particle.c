@@ -2,6 +2,9 @@
 #include <stdlib.h>
 #include <string.h>
 #include <math.h>
+#include <GL/gl.h>
+#include <GL/glu.h>
+#include <GL/glut.h>
 #include "graphics.h"
 
 #define USECPP 0
@@ -14,19 +17,14 @@ Particle *particle_create( void ){
   if(!p){
     return NULL;
   }
-  p->loc = NULL; 
-  p->alpha = 0;
-  p->color = NULL;
-  p->dir = NULL;
   p->life = 0;
-  p->speed = NULL;
   return p;
 }
 
 /* returns an allocated Polygon pointer with the vertex list 
    initialized to a copy of the points in vlist */
-Polygon *polygon_createp(float *location, float a, float *c, 
-			 vec3 direction, int l, float *velocity){
+Particle *particle_createp(float *location, float *c, 
+			   /*vec3 direction,*/ int l, float *velocity){
   Particle *p;
   p = malloc(sizeof(Particle));
   if(!p){
@@ -36,11 +34,11 @@ Polygon *polygon_createp(float *location, float a, float *c,
   p->loc[0] = location[0];
   p->loc[1] = location[1];
   p->loc[2] = location[2];
-  p->alpha = a;
   p->color[0] = c[0];
   p->color[1] = c[1];
   p->color[2] = c[2];
-  p->dir = direction;
+  p->color[3] = c[3];
+  //p->dir = direction;
   p->life = l;
   p->speed[0] = velocity[0];
   p->speed[1] = velocity[1];
@@ -58,26 +56,21 @@ void particle_free(Particle *p){
 
 /* initializes the existing Particle to an empty Particle */
 void particle_init(Particle *p){
-  p->loc = NULL; 
-  p->alpha = 0;
-  p->color = NULL;
-  p->dir = NULL;
   p->life = 0;
-  p->speed = NULL;
 }
 
 
 /* Sets the particles to the given parameters */
-void particle_set(Particle *p, float *location, float a, float *c, 
-		    vec3 direction, int l, float *velocity){
+void particle_set(Particle *p, float *location, float *c, 
+		  /*vec3 direction,*/ int l, float *velocity){
   p->loc[0] = location[0];
   p->loc[1] = location[1];
   p->loc[2] = location[2];
-  p->alpha = a;
   p->color[0] = c[0];
   p->color[1] = c[1];
   p->color[2] = c[2];
-  p->dir = direction;
+  p->color[3] = c[3];
+  //p->dir = direction;
   p->life = l;
   p->speed[0] = velocity[0];
   p->speed[1] = velocity[1];
@@ -89,11 +82,11 @@ void particle_copy(Particle *to, Particle *from){
   to->loc[0] = from->loc[0];
   to->loc[1] = from->loc[1];
   to->loc[2] = from->loc[2];
-  to->alpha = from->a;
   to->color[0] = from->color[0];
   to->color[1] = from->color[1];
   to->color[2] = from->color[2];
-  to->dir = from->dir;
+  to->color[3] = from->color[3];
+  //to->dir = from->dir;
   to->life = from->life;
   to->speed[0] = from->speed[0];
   to->speed[1] = from->speed[1];
@@ -103,6 +96,6 @@ void particle_copy(Particle *to, Particle *from){
 /* Print location of particle */
 void particle_print(Particle *p, FILE*fp){
   fprintf(fp, " ( %lf, %lf, %lf ) \n", 
-	  p->loc[0], p->loc[1], p->loc[2], p->loc[3]);
+	  p->loc[0], p->loc[1], p->loc[2]);
 }
   
