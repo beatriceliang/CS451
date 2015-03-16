@@ -2,30 +2,39 @@
 #include <stdlib.h>
 #include <GL/gl.h>
 #include <GL/glut.h>
+#include "graphics.h"
+
+Emitter *e;
 
 // Function for drawing the contents of the screen
 void display(void) {
+  printf("Entering display\n");
   GLfloat position[] = {10.0, 5.0, 20.0, 1.0};
-	int i;
-
-	// clear screen
+  int i;
+  // clear screen
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	glColor3f(1.0, 1.0, 1.0);
-
-	// reset the modelview matrix
+  glColor4f(1.0, 1.0, 1.0, 0.5);
+  
+  // reset the modelview matrix
   glLoadIdentity();
-
-	// set up the viewing transformation
-	gluLookAt(0.0, 0.0, 8.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0);
-
-	// set up the light
+  
+  // set up the viewing transformation
+  gluLookAt(0.0, 0.0, 8.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0);
+  
+  // set up the light
   glLightfv(GL_LIGHT0, GL_POSITION, position);
-
-	// set up a sphere
-	glutSolidSphere(1.0, 32, 32);
-
-	// draw everything
+  
+  // set up a sphere
+  //glutSolidSphere(1.0, 32, 32);
+  
+  printf("Before emit stuff\n");
+  emitter_update(e);
+  emitter_draw(e);
+  // draw everything
   glFlush();
+  usleep(10000);
+  glutPostRedisplay();
+
 }
 
 //  Function called when the window is resized
@@ -74,19 +83,24 @@ void initlights(void) {
 	// enable lighting, light0 and depth testing
   glEnable(GL_LIGHTING);
   glEnable(GL_LIGHT0);
-	glEnable(GL_DEPTH_TEST); // important, or you can see through the sphere
+  glEnable(GL_DEPTH_TEST); // important, or you can see through the sphere
 
 }
 
 // init function
 void init(void) {
-	// background color
+  float loc[3] = {0.0, 0.0, 0.0};
+  // background color
   glClearColor(0.0, 0.0, 0.0, 0.0);
 
-	// whether shading is smooth or flat
+  // whether shading is smooth or flat
   glShadeModel(GL_SMOOTH);
 
-	initlights();
+  initlights();
+  printf("Before seg?\n");
+  e = emitter_create();
+  emitter_set(e, loc, 10);
+  printf("After seg?\n");
 }
 
 //  This function is called whenever a key event occurs.
@@ -95,6 +109,7 @@ void keyboard(unsigned char key, int x, int y)
 {
    switch( key) {
    case 'q': // quit
+     emitter_free(e);
      exit(0);
      break;
    default:
@@ -105,7 +120,7 @@ void keyboard(unsigned char key, int x, int y)
 // main function
 int main(int argc, char **argv) {
 
-	// initialize
+  // initialize
   glutInit(&argc, argv);
   glutInitDisplayMode(GLUT_SINGLE | GLUT_RGB | GLUT_DEPTH);
   glutInitWindowSize(500, 500);
@@ -113,12 +128,12 @@ int main(int argc, char **argv) {
   glutCreateWindow("Sphere");
   init();
 
-	// set up the callback functions
+  // set up the callback functions
   glutDisplayFunc(display);
   glutReshapeFunc(reshape);
   glutKeyboardFunc(keyboard);
 
-	// run the main loop
+  // run the main loop
   glutMainLoop();
 
   return(0);

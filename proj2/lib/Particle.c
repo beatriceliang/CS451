@@ -114,4 +114,5 @@ void particle_update( Particle *p ){
   p->loc[0] = p->loc[0] + p->speed[0];
   p->loc[1] = p->loc[1] + p->speed[1];
   p->loc[2] = p->loc[2] + p->speed[2];
+  particle_print(p, stdout);
 }

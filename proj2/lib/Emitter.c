@@ -27,6 +27,7 @@ void emitter_init( Emitter *e ){
 
 
 void emitter_set( Emitter *e, float *loc, int pSize){
+  printf("Entering Emitter_set");
   if(e->pList)
     free(e->pList);
   e->pList = NULL;
@@ -42,6 +43,7 @@ void emitter_set( Emitter *e, float *loc, int pSize){
   e->loc[0] = loc[0];
   e->loc[1] = loc[1];
   e->loc[2] = loc[2];
+  printf("Entering Emitter_set");
 }
 
 void emitter_clear( Emitter *e ){
@@ -61,21 +63,24 @@ void emitter_free( Emitter *e ){
 }
 
 void emitter_setup( Emitter *e ){
+  printf("Entering Emitter_setup");
   int i;
   float v[3];
   float c[3] = {0.2, 0.2, 0.2};
 
   for(i=0; i < e->pSize; i++){
-    v[0] = (float)rand()/20.0;
+    v[0] = (float)rand()/(float)(RAND_MAX)/20.0;
     v[1] = 0.05;
-    v[2] = (float)rand()/20.0;
+    v[2] = (float)rand()/(float)(RAND_MAX)/20.0;
     particle_set( &e->pList[i], e->loc, c, 20, 10*(i%5), v);
   }
   e->setup = 1;
+  printf("Exiting Emitter_setup");
 }
 
 /* Update the particles in the emitter */
 void emitter_update( Emitter *e ){
+  printf("Entering Emitter_update");
   int i;
 
   if(e->setup){
@@ -87,23 +92,28 @@ void emitter_update( Emitter *e ){
   else{
     emitter_setup(e);
   }
+  printf("Exiting Emitter_update");
 }
 
 void emitter_draw( Emitter *e ){
+  printf("Entering Emitter_draw");
   int i;
 
   if(e->setup){
     //draw active particles
     for(i = 0; i < e->pSize; i++){
-      glPushMatrix();
-      glColor4f(e->pList[i].color[0], e->pList[i].color[1], 
-	      e->pList[i].color[2], e->pList[i].color[3]);
-      glTranslatef(e->pList[i].loc[0], e->pList[i].loc[1], e->pList[i].loc[2]);
-      glutSolidSphere(0.1, 5, 5);
-      glPopMatrix();
+      if(e->pList[i].life > 0 && e->pList[i].waitTime == 0){
+	glPushMatrix();
+	glColor4f(e->pList[i].color[0], e->pList[i].color[1], 
+	e->pList[i].color[2], e->pList[i].color[3]);
+	glTranslatef(e->pList[i].loc[0], e->pList[i].loc[1], e->pList[i].loc[2]);
+	glutSolidSphere(0.1, 10, 10);
+	glPopMatrix();
+      }
     }
   }
   else{
     emitter_setup(e);
   }
+  printf("Exiting Emitter_draw");
 }
