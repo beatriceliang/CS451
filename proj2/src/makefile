@@ -52,11 +52,9 @@ $(ODIR)/%.o: %.cpp $(DEPS)
 all:	
 	for i in $(EXECUTABLES); do (make $$i) ; done
 
-
 # put the specific executable rules here
 gltest: $(ODIR)/glTest.o
 	$(CC) -o $(BINDIR)/$@ $^ $(LFLAGS) $(LIBS) $(CFLAGS)
-
 
 .PHONY: clean
 

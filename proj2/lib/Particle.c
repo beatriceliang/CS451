@@ -24,7 +24,7 @@ Particle *particle_create( void ){
 /* returns an allocated Polygon pointer with the vertex list 
    initialized to a copy of the points in vlist */
 Particle *particle_createp(float *location, float *c, 
-			   /*vec3 direction,*/ int l, float *velocity){
+			   int l, int wait, float *velocity){
   Particle *p;
   p = malloc(sizeof(Particle));
   if(!p){
@@ -38,7 +38,7 @@ Particle *particle_createp(float *location, float *c,
   p->color[1] = c[1];
   p->color[2] = c[2];
   p->color[3] = c[3];
-  //p->dir = direction;
+  p->waitTime = wait;
   p->life = l;
   p->speed[0] = velocity[0];
   p->speed[1] = velocity[1];
@@ -62,7 +62,7 @@ void particle_init(Particle *p){
 
 /* Sets the particles to the given parameters */
 void particle_set(Particle *p, float *location, float *c, 
-		  /*vec3 direction,*/ int l, float *velocity){
+		  int l, int wait, float *velocity){
   p->loc[0] = location[0];
   p->loc[1] = location[1];
   p->loc[2] = location[2];
@@ -70,7 +70,7 @@ void particle_set(Particle *p, float *location, float *c,
   p->color[1] = c[1];
   p->color[2] = c[2];
   p->color[3] = c[3];
-  //p->dir = direction;
+  p->waitTime = wait;
   p->life = l;
   p->speed[0] = velocity[0];
   p->speed[1] = velocity[1];
@@ -86,7 +86,7 @@ void particle_copy(Particle *to, Particle *from){
   to->color[1] = from->color[1];
   to->color[2] = from->color[2];
   to->color[3] = from->color[3];
-  //to->dir = from->dir;
+  to->waitTime = from->waitTime;
   to->life = from->life;
   to->speed[0] = from->speed[0];
   to->speed[1] = from->speed[1];
@@ -99,3 +99,19 @@ void particle_print(Particle *p, FILE*fp){
 	  p->loc[0], p->loc[1], p->loc[2]);
 }
   
+/* Updates the particle */
+void particle_update( Particle *p ){
+  // dead particle
+  if( p->life == 0 )
+    return;
+  // waiting particle
+  if( p->waitTime > 0 ){
+    p->waitTime--;
+    return;
+  }
+  //active particle w/ life
+  p->life--;
+  p->loc[0] = p->loc[0] + p->speed[0];
+  p->loc[1] = p->loc[1] + p->speed[1];
+  p->loc[2] = p->loc[2] + p->speed[2];
+}
