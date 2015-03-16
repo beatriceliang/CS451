@@ -42,4 +42,5 @@ void emitter_clear( Emitter *e );
 void emitter_free( Emitter *e );
 void emitter_update( Emitter *e );
 void emitter_setup( Emitter *e );
+void emitter_draw( Emitter *e );
 #endif

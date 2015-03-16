@@ -2,6 +2,8 @@
 #include <stdlib.h>
 #include <string.h>
 #include <math.h>
+#include <GL/gl.h>
+#include <GL/glut.h>
 #include "graphics.h"
 
 #define USECPP 0
@@ -87,3 +89,21 @@ void emitter_update( Emitter *e ){
   }
 }
 
+void emitter_draw( Emitter *e ){
+  int i;
+
+  if(e->setup){
+    //draw active particles
+    for(i = 0; i < e->pSize; i++){
+      glPushMatrix();
+      glColor4f(e->pList[i].color[0], e->pList[i].color[1], 
+	      e->pList[i].color[2], e->pList[i].color[3]);
+      glTranslatef(e->pList[i].loc[0], e->pList[i].loc[1], e->pList[i].loc[2]);
+      glutSolidSphere(0.1, 5, 5);
+      glPopMatrix();
+    }
+  }
+  else{
+    emitter_setup(e);
+  }
+}
