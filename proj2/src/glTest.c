@@ -8,7 +8,7 @@ Emitter *e;
 
 // Function for drawing the contents of the screen
 void display(void) {
-  printf("Entering display\n");
+  //printf("Entering display\n");
   GLfloat position[] = {10.0, 5.0, 20.0, 1.0};
   int i;
   // clear screen
@@ -27,7 +27,7 @@ void display(void) {
   // set up a sphere
   //glutSolidSphere(1.0, 32, 32);
   
-  printf("Before emit stuff\n");
+  //printf("Before emit stuff\n");
   emitter_update(e);
   emitter_draw(e);
   // draw everything
@@ -97,10 +97,11 @@ void init(void) {
   glShadeModel(GL_SMOOTH);
 
   initlights();
-  printf("Before seg?\n");
+  //printf("Before seg?\n");
   e = emitter_create();
-  emitter_set(e, loc, 10);
-  printf("After seg?\n");
+  emitter_set(e, loc, 10000);
+    
+  //printf("After seg?\n");
 }
 
 //  This function is called whenever a key event occurs.

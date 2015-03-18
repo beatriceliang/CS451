@@ -101,6 +101,7 @@ void particle_print(Particle *p, FILE*fp){
   
 /* Updates the particle */
 void particle_update( Particle *p ){
+    int i;
   // dead particle
   if( p->life == 0 )
     return;
@@ -111,8 +112,11 @@ void particle_update( Particle *p ){
   }
   //active particle w/ life
   p->life--;
+    for (i = 0; i < 3; i++){
+        p->speed[i] = p->speed[i] / (1.02);
+    }
   p->loc[0] = p->loc[0] + p->speed[0];
   p->loc[1] = p->loc[1] + p->speed[1];
   p->loc[2] = p->loc[2] + p->speed[2];
-  particle_print(p, stdout);
+  //particle_print(p, stdout);
 }
