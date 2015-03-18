@@ -65,8 +65,8 @@ void reshape(int w, int h) {
 void init(void) {
   float loc[3] = {0.0, 0.0, 0.0};
   float coord[6] = { -0.05, 0.05, 0.3, 0.3, -0.05, 0.05 };
-    float speed[3] = {0.003, 0, 0.0};//{0.2,0.0,0.3};
-    float wloc[3] = {2.0, 0.0, 0.0};//{0.05,0.2,0};
+    float speed[3] = {0.00002, 0, 0.0};//{0.2,0.0,0.3};
+    float wloc[3] = {0.06, 0.5, 0.0};//{0.05,0.2,0};
   // background color
   glClearColor(0.0, 0.0, 0.0, 0.0);
 

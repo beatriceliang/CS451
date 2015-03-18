@@ -84,9 +84,12 @@ void emitter_update( Emitter *e, Obstacle *o, Wind *w){
   int i, j, k;
   float dist;
   float wdist;
+  float dSpeed[3];
   Particle *p;
   int x,y,z; //0 if no collision in specified direction
-
+    
+   
+    
   x = 0; y = 0; z = 0;
   if(e->setup){
     //loop through active particles
@@ -100,13 +103,14 @@ void emitter_update( Emitter *e, Obstacle *o, Wind *w){
 	else{
 	  //active particle w/ life
 	  p->life--;
+        wdist = (w->coords[0]- p->loc[0])*(w->coords[0]- p->loc[0])+(w->coords[1]- p->loc[1])*(w->coords[1]- p->loc[1])+(w->coords[2]- p->loc[2])*(w->coords[2]- p->loc[2]);
+        dist = (e->loc[0]-p->loc[0])*(e->loc[0]-p->loc[0])+(e->loc[1]-p->loc[1])*(e->loc[1]-p->loc[1])+(e->loc[2]-p->loc[2])*(e->loc[2]-p->loc[2]);
+
 	  for (i = 0; i < 3; i++){
-	    p->speed[i] = 
-	      p->speed[i]+((float)rand()/(float)(RAND_MAX)-0.5)/7000.0;
+	    p->speed[i] = p->speed[i]+((float)rand()/(float)(RAND_MAX)-0.5)/7000.0;
+          dSpeed[i] = p->speed[i] + w->speed[i]/wdist;
 	  }
-      wdist = (w->coords[0]- p->loc[0])*(w->coords[0]- p->loc[0])+(w->coords[1]- p->loc[1])*(w->coords[1]- p->loc[1])+(w->coords[2]- p->loc[2])*(w->coords[2]- p->loc[2]);
-	  dist = p->loc[0]*p->loc[0]+p->loc[1]*p->loc[1]+p->loc[2]*p->loc[2];
-	  //changes colors of particles so they get redder as they get further from the emitter
+      	  //changes colors of particles so they get redder as they get further from the emitter
 	  for(i= 0; i <3; i++){
 	    p->color[i] = 1.0/ ((dist*(float)(i+0.1)+1)*(dist*(float)(i+0.1)+1)*(dist*(float)(i+0.1)+1)*(dist*(float)(i+0.1)+1));
 	  }
@@ -118,7 +122,7 @@ void emitter_update( Emitter *e, Obstacle *o, Wind *w){
 	       (p->loc[0] + p->speed[0]) >= o[k].coords[0]&& 
 	       (p->loc[1] >= o[k].coords[2] && p->loc[1] <= o[k].coords[3]) &&
 	       (p->loc[2] >= o[k].coords[4] && p->loc[2] <= o[k].coords[5])){
-	      p->loc[0] = p->loc[0] -  p->speed[0];
+	      p->loc[0] = p->loc[0] -  dSpeed[0];
 	      printf("left collision \n");
 	    }
 	    //collides from the right
@@ -127,7 +131,7 @@ void emitter_update( Emitter *e, Obstacle *o, Wind *w){
 		 (p->loc[0] + p->speed[0]) <= o[k].coords[1]&& 
 		 (p->loc[1] >= o[k].coords[2] && p->loc[1] <= o[k].coords[3]) &&
 		 (p->loc[2] >= o[k].coords[4] && p->loc[2] <= o[k].coords[5])){
-		p->loc[0] = p->loc[0] -  p->speed[0];
+		p->loc[0] = p->loc[0] -  dSpeed[0];
 		printf("right collision \n");
 	      }
 	    }
@@ -137,7 +141,7 @@ void emitter_update( Emitter *e, Obstacle *o, Wind *w){
 	       (p->loc[0] >= o[k].coords[0] && p->loc[0] <= o[k].coords[1]) &&
 	       (p->loc[2] >= o[k].coords[4] && p->loc[2] <= o[k].coords[5])){
             //printf("collide %.6f, %.6f\n",p->loc[1],p->speed[0]);
-	      p->loc[1] = p->loc[1] -  p->speed[1];
+	      p->loc[1] = p->loc[1] -  dSpeed[1];
 	      //printf("colliding from bottom \n");
 	    }
 	    //collides from the top
@@ -146,7 +150,7 @@ void emitter_update( Emitter *e, Obstacle *o, Wind *w){
 		 (p->loc[1] + p->speed[1]) <= o[k].coords[3]&& 
 		 (p->loc[0] >= o[k].coords[0] && p->loc[0] <= o[k].coords[1]) &&
 		 (p->loc[2] >= o[k].coords[4] && p->loc[2] <= o[k].coords[5])){
-		p->loc[1] = p->loc[1] - p->speed[1];
+		p->loc[1] = p->loc[1] - dSpeed[1];
 		printf("top collision \n");
 	      }
 	    }
@@ -155,7 +159,7 @@ void emitter_update( Emitter *e, Obstacle *o, Wind *w){
 	       (p->loc[2] + p->speed[2]) >= o[k].coords[4]&& 
 	       (p->loc[0] >= o[k].coords[0] && p->loc[0] <= o[k].coords[1]) &&
 	       (p->loc[1] >= o[k].coords[2] && p->loc[1] <= o[k].coords[3])){
-	      p->loc[2] = p->loc[2] -  p->speed[2];
+	      p->loc[2] = p->loc[2] -  dSpeed[2];
 	      printf("back collision \n");
 	    }
 	    //collides from the front
@@ -164,17 +168,15 @@ void emitter_update( Emitter *e, Obstacle *o, Wind *w){
 		 (p->loc[2] + p->speed[2]) <= o[k].coords[5]&& 
 		 (p->loc[0] >= o[k].coords[0] && p->loc[0] <= o[k].coords[1]) &&
 		 (p->loc[1] >= o[k].coords[2] && p->loc[1] <= o[k].coords[3])){
-		p->loc[2] = p->loc[2] -  p->speed[2];
+		p->loc[2] = p->loc[2] -  dSpeed[2];
 		printf("front collision \n");
 	      }
 	    }
 	  }
         //particle_print(p,stdout);
+        for (i = 0; i < 3; i++)
+            p->loc[i] = p->loc[i] +dSpeed[i];
         
-        p->loc[0] = p->loc[0] + p->speed[0] +w->speed[0]/wdist;
-        p->loc[1] = p->loc[1] + p->speed[1] + w->speed[1]/wdist;
-        p->loc[2] = p->loc[2] + p->speed[2] + w->speed[2]/wdist;
-
 	}
       }
     }
