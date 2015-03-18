@@ -102,6 +102,7 @@ void particle_print(Particle *p, FILE*fp){
 /* Updates the particle */
 void particle_update( Particle *p ){
     int i;
+    float dist;
   // dead particle
   if( p->life == 0 )
     return;
@@ -115,6 +116,12 @@ void particle_update( Particle *p ){
     for (i = 0; i < 3; i++){
         p->speed[i] = p->speed[i]+((float)rand()/(float)(RAND_MAX)-0.5)/7000.0;
     }
+    dist = p->loc[0]*p->loc[0]+p->loc[1]*p->loc[1]+p->loc[2]*p->loc[2];
+    for(i= 0; i <3; i++){
+        p->color[i] = 1.0/ ((dist*(float)(i+0.1)+1)*(dist*(float)(i+0.1)+1)*(dist*(float)(i+0.1)+1));
+    }
+    
+
   p->loc[0] = p->loc[0] + p->speed[0];
   p->loc[1] = p->loc[1] + p->speed[1];
   p->loc[2] = p->loc[2] + p->speed[2];

@@ -72,7 +72,7 @@ void emitter_setup( Emitter *e ){
       v[0] = ((float)rand()/(float)(RAND_MAX)-0.5)/2000.0;
       v[1] = ((float)rand()/(float)(RAND_MAX))/250;
       v[2] = ((float)rand()/(float)(RAND_MAX)-0.5)/2000.0;
-      particle_set( &e->pList[i], e->loc, c, 5000, i%(e->pSize/200), v);
+      particle_set( &e->pList[i], e->loc, c, 2000, i%(e->pSize/200), v);
   }
   e->setup = 1;
   //printf("Exiting Emitter_setup");
