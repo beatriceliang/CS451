@@ -79,7 +79,7 @@ void emitter_setup( Emitter *e ){
 }
 
 /* Update the particles in the emitter */
-void emitter_update( Emitter *e, Obstacle *o, Wind *w){
+void emitter_update( Emitter *e, Obstacle **o, Wind *w, int size){
   //printf("Entering Emitter_update");
   int i, j, k;
   float dist;
@@ -115,59 +115,59 @@ void emitter_update( Emitter *e, Obstacle *o, Wind *w){
 	    p->color[i] = 1.0/ ((dist*(float)(i+0.1)+1)*(dist*(float)(i+0.1)+1)*(dist*(float)(i+0.1)+1)*(dist*(float)(i+0.1)+1));
 	  }
 	  //looping through obstacles
-	  for(k=0; k <1; k++){
+	  for(k=0; k < size; k++){
 	    // printf("Entering \n");
 	    //collides from the left
-        if(p->loc[0] <= o[k].coords[0] &&
-	       (p->loc[0] + p->speed[0]) >= o[k].coords[0]&& 
-	       (p->loc[1] >= o[k].coords[2] && p->loc[1] <= o[k].coords[3]) &&
-	       (p->loc[2] >= o[k].coords[4] && p->loc[2] <= o[k].coords[5])){
+	    if(p->loc[0] <= o[k]->coords[0] &&
+	       (p->loc[0] + p->speed[0]) >= o[k]->coords[0]&& 
+	       (p->loc[1] >= o[k]->coords[2] && p->loc[1] <= o[k]->coords[3]) &&
+	       (p->loc[2] >= o[k]->coords[4] && p->loc[2] <= o[k]->coords[5])){
 	      p->loc[0] = p->loc[0] -  dSpeed[0];
 	      printf("left collision \n");
 	    }
 	    //collides from the right
 	    else {
-	      if(p->loc[0] >= o[k].coords[1] && 
-		 (p->loc[0] + p->speed[0]) <= o[k].coords[1]&& 
-		 (p->loc[1] >= o[k].coords[2] && p->loc[1] <= o[k].coords[3]) &&
-		 (p->loc[2] >= o[k].coords[4] && p->loc[2] <= o[k].coords[5])){
+	      if(p->loc[0] >= o[k]->coords[1] && 
+		 (p->loc[0] + p->speed[0]) <= o[k]->coords[1]&& 
+		 (p->loc[1] >= o[k]->coords[2] && p->loc[1] <= o[k]->coords[3]) &&
+		 (p->loc[2] >= o[k]->coords[4] && p->loc[2] <= o[k]->coords[5])){
 		p->loc[0] = p->loc[0] -  dSpeed[0];
 		printf("right collision \n");
 	      }
 	    }
 	    //collides from the bottom and in the region of plane
-	    if(p->loc[1] <= o[k].coords[2] &&
-	       (p->loc[1] + p->speed[1]) >= o[k].coords[2] && 
-	       (p->loc[0] >= o[k].coords[0] && p->loc[0] <= o[k].coords[1]) &&
-	       (p->loc[2] >= o[k].coords[4] && p->loc[2] <= o[k].coords[5])){
+	    if(p->loc[1] <= o[k]->coords[2] &&
+	       (p->loc[1] + p->speed[1]) >= o[k]->coords[2] && 
+	       (p->loc[0] >= o[k]->coords[0] && p->loc[0] <= o[k]->coords[1]) &&
+	       (p->loc[2] >= o[k]->coords[4] && p->loc[2] <= o[k]->coords[5])){
             //printf("collide %.6f, %.6f\n",p->loc[1],p->speed[0]);
 	      p->loc[1] = p->loc[1] -  dSpeed[1];
 	      //printf("colliding from bottom \n");
 	    }
 	    //collides from the top
 	    else{ 
-	      if(p->loc[1] >= o[k].coords[3] && 
-		 (p->loc[1] + p->speed[1]) <= o[k].coords[3]&& 
-		 (p->loc[0] >= o[k].coords[0] && p->loc[0] <= o[k].coords[1]) &&
-		 (p->loc[2] >= o[k].coords[4] && p->loc[2] <= o[k].coords[5])){
+	      if(p->loc[1] >= o[k]->coords[3] && 
+		 (p->loc[1] + p->speed[1]) <= o[k]->coords[3]&& 
+		 (p->loc[0] >= o[k]->coords[0] && p->loc[0] <= o[k]->coords[1]) &&
+		 (p->loc[2] >= o[k]->coords[4] && p->loc[2] <= o[k]->coords[5])){
 		p->loc[1] = p->loc[1] - dSpeed[1];
 		printf("top collision \n");
 	      }
 	    }
 	    //collides from the back
-	    if(p->loc[2] <= o[k].coords[4] && 
-	       (p->loc[2] + p->speed[2]) >= o[k].coords[4]&& 
-	       (p->loc[0] >= o[k].coords[0] && p->loc[0] <= o[k].coords[1]) &&
-	       (p->loc[1] >= o[k].coords[2] && p->loc[1] <= o[k].coords[3])){
+	    if(p->loc[2] <= o[k]->coords[4] && 
+	       (p->loc[2] + p->speed[2]) >= o[k]->coords[4]&& 
+	       (p->loc[0] >= o[k]->coords[0] && p->loc[0] <= o[k]->coords[1]) &&
+	       (p->loc[1] >= o[k]->coords[2] && p->loc[1] <= o[k]->coords[3])){
 	      p->loc[2] = p->loc[2] -  dSpeed[2];
 	      printf("back collision \n");
 	    }
 	    //collides from the front
 	    else{ 
-	      if(p->loc[2] >= o[k].coords[5] && 
-		 (p->loc[2] + p->speed[2]) <= o[k].coords[5]&& 
-		 (p->loc[0] >= o[k].coords[0] && p->loc[0] <= o[k].coords[1]) &&
-		 (p->loc[1] >= o[k].coords[2] && p->loc[1] <= o[k].coords[3])){
+	      if(p->loc[2] >= o[k]->coords[5] && 
+		 (p->loc[2] + p->speed[2]) <= o[k]->coords[5]&& 
+		 (p->loc[0] >= o[k]->coords[0] && p->loc[0] <= o[k]->coords[1]) &&
+		 (p->loc[1] >= o[k]->coords[2] && p->loc[1] <= o[k]->coords[3])){
 		p->loc[2] = p->loc[2] -  dSpeed[2];
 		printf("front collision \n");
 	      }

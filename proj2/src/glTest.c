@@ -5,7 +5,8 @@
 #include "graphics.h"
 
 Emitter *e;
-Obstacle *o;
+Obstacle * oList[2];
+Obstacle *o1, *o2;
 Wind *w;
 
 // Function for drawing the contents of the screen
@@ -21,7 +22,7 @@ void display(void) {
   glLoadIdentity();
   
   // set up the viewing transformation
-  gluLookAt(0.0, 0.0, 5.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0);
+  gluLookAt(0.0, 1.0, 5.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0);
   
   // set up the light
   glLightfv(GL_LIGHT0, GL_POSITION, position);
@@ -30,9 +31,9 @@ void display(void) {
   //glutSolidSphere(1.0, 32, 32);
   
   //printf("Before emit stuff\n");
-  emitter_update(e, o, w);
+  emitter_update(e, oList, w, 2);
   emitter_draw(e);
-  obstacle_draw(o);
+  obstacle_draw(oList, 2);
   // draw everything
   glFlush();
   usleep(10000);
@@ -64,9 +65,10 @@ void reshape(int w, int h) {
 // init function
 void init(void) {
   float loc[3] = {0.0, 0.0, 0.0};
-  float coord[6] = { -0.05, 0.05, 0.3, 0.3, -0.05, 0.05 };
-    float speed[3] = {0.00002, 0, 0.0};//{0.2,0.0,0.3};
-    float wloc[3] = {0.06, 0.5, 0.0};//{0.05,0.2,0};
+  float coord1[6] = { -0.05, 0.1, 0.3, 0.3, -0.05, 0.05 };
+  float coord2[6] = { -0.05, 0.025, 0.15, 0.15, -0.05, 0.05 };
+  float speed[3] = {0.00002, 0, 0.0};//{0.2,0.0,0.3};
+  float wloc[3] = {0.06, 0.5, 0.0};//{0.05,0.2,0};
   // background color
   glClearColor(0.0, 0.0, 0.0, 0.0);
 
@@ -76,10 +78,15 @@ void init(void) {
   //initlights();
   //printf("Before seg?\n");
   e = emitter_create();
-  o = obstacle_create();
+  o1 = obstacle_create();
+  o2 = obstacle_create();
+
   w = wind_create();
   emitter_set(e, loc, 500000);
-  obstacle_set(o, coord, 0, 0 );
+  obstacle_set(o1, coord1, 0 );
+  obstacle_set(o2, coord2, 0 );
+  oList[0] = o1;
+  oList[1] = o2;
   wind_set(w, wloc,speed);
   glEnable(GL_DEPTH_TEST);
   //printf("After seg?\n");
@@ -92,7 +99,8 @@ void keyboard(unsigned char key, int x, int y)
    switch( key) {
    case 'q': // quit
      emitter_free(e);
-     obstacle_free(o);
+     obstacle_free(o1);
+     obstacle_free(o2);
      wind_free(w);
      exit(0);
      break;
