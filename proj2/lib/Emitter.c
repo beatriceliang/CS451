@@ -62,7 +62,7 @@ void emitter_free( Emitter *e ){
   }
 }
 
-void emitter_setup( Emitter *e ){
+void emitter_setup( Emitter *e, int life ){
   //printf("Entering Emitter_setup");
   int i;
   float v[3];
@@ -72,7 +72,7 @@ void emitter_setup( Emitter *e ){
       v[0] = ((float)rand()/(float)(RAND_MAX)-0.5)/2000.0;
       v[1] = ((float)rand()/(float)(RAND_MAX))/250;
       v[2] = ((float)rand()/(float)(RAND_MAX)-0.5)/2000.0;
-      particle_set( &e->pList[i], e->loc, c, 1000, i%(e->pSize/200), v);
+      particle_set( &e->pList[i], e->loc, c, life, i%(e->pSize/200), v);
   }
   e->setup = 1;
   //printf("Exiting Emitter_setup");
@@ -95,8 +95,54 @@ void emitter_update( Emitter *e, Obstacle **o, Wind *w, int size){
     //loop through active particles
     for(j = 0; j < e->pSize; j++){
       p = &e->pList[j];
-      // dead particle
-      if( p->life != 0 ){
+      
+      // particle w/o life
+      if( p->life == 0 ){
+	// active and not burnt
+	if( p->waitTime == 0 && p->burnt == 0){
+	  //looping through obstacles to check for collision
+	  for(k=0; k < size; k++){
+	    //stick to top and bottom
+	    if(o[k]->type == 0){
+	      if(fabsf(o[k]->coords[2] - p->loc[1]) < 0.003){
+		p->burnt = 1;
+		//stick to top
+		if((o[k]->coords[2] - p->loc[1]) < 0 )
+		  p->loc[1] = o[k]->coords[2] + 0.00049;
+		//stick to bottom
+		else
+		  p->loc[1] = o[k]->coords[2] - 0.00049;
+	      }
+	    }
+	    //stick to left and right
+	    if(o[k]->type == 1){
+	      if(fabsf(o[k]->coords[0] - p->loc[0]) < 0.003){
+		p->burnt = 1;
+		//stick to right
+		if((o[k]->coords[0] - p->loc[0]) < 0 )
+		  p->loc[0] = o[k]->coords[0] + 0.00049;
+		//stick to left
+		else
+		  p->loc[0] = o[k]->coords[0] - 0.00049;
+	      }
+	    }
+	    //stick to front and back
+	    if(o[k]->type == 2){
+	      if(fabsf(o[k]->coords[4] - p->loc[2]) < 0.003){
+		p->burnt = 1;
+		//stick to front
+		if((o[k]->coords[4] - p->loc[2]) < 0 )
+		  p->loc[2] = o[k]->coords[4] + 0.00049;
+		//stick to back
+		else
+		  p->loc[2] = o[k]->coords[4] - 0.00049;
+	      }
+	    }
+	  }
+	}
+      }
+      // particle w/life
+      else{
 	// waiting particle
 	if( p->waitTime > 0 )
 	  p->waitTime--;
@@ -116,14 +162,12 @@ void emitter_update( Emitter *e, Obstacle **o, Wind *w, int size){
 	  }
 	  //looping through obstacles
 	  for(k=0; k < size; k++){
-	    // printf("Entering \n");
 	    //collides from the left
 	    if(p->loc[0] <= o[k]->coords[0] &&
 	       (p->loc[0] + p->speed[0]) >= o[k]->coords[0]&& 
 	       (p->loc[1] >= o[k]->coords[2] && p->loc[1] <= o[k]->coords[3]) &&
 	       (p->loc[2] >= o[k]->coords[4] && p->loc[2] <= o[k]->coords[5])){
 	      p->loc[0] = p->loc[0] -  dSpeed[0];
-	      printf("left collision \n");
 	    }
 	    //collides from the right
 	    else {
@@ -132,7 +176,6 @@ void emitter_update( Emitter *e, Obstacle **o, Wind *w, int size){
 		 (p->loc[1] >= o[k]->coords[2] && p->loc[1] <= o[k]->coords[3]) &&
 		 (p->loc[2] >= o[k]->coords[4] && p->loc[2] <= o[k]->coords[5])){
 		p->loc[0] = p->loc[0] -  dSpeed[0];
-		printf("right collision \n");
 	      }
 	    }
 	    //collides from the bottom and in the region of plane
@@ -140,9 +183,8 @@ void emitter_update( Emitter *e, Obstacle **o, Wind *w, int size){
 	       (p->loc[1] + p->speed[1]) >= o[k]->coords[2] && 
 	       (p->loc[0] >= o[k]->coords[0] && p->loc[0] <= o[k]->coords[1]) &&
 	       (p->loc[2] >= o[k]->coords[4] && p->loc[2] <= o[k]->coords[5])){
-            //printf("collide %.6f, %.6f\n",p->loc[1],p->speed[0]);
+	      //printf("collide %.6f, %.6f\n",p->loc[1],p->speed[0]);
 	      p->loc[1] = p->loc[1] -  dSpeed[1];
-	      //printf("colliding from bottom \n");
 	    }
 	    //collides from the top
 	    else{ 
@@ -151,7 +193,6 @@ void emitter_update( Emitter *e, Obstacle **o, Wind *w, int size){
 		 (p->loc[0] >= o[k]->coords[0] && p->loc[0] <= o[k]->coords[1]) &&
 		 (p->loc[2] >= o[k]->coords[4] && p->loc[2] <= o[k]->coords[5])){
 		p->loc[1] = p->loc[1] - dSpeed[1];
-		printf("top collision \n");
 	      }
 	    }
 	    //collides from the back
@@ -160,7 +201,6 @@ void emitter_update( Emitter *e, Obstacle **o, Wind *w, int size){
 	       (p->loc[0] >= o[k]->coords[0] && p->loc[0] <= o[k]->coords[1]) &&
 	       (p->loc[1] >= o[k]->coords[2] && p->loc[1] <= o[k]->coords[3])){
 	      p->loc[2] = p->loc[2] -  dSpeed[2];
-	      printf("back collision \n");
 	    }
 	    //collides from the front
 	    else{ 
@@ -169,20 +209,19 @@ void emitter_update( Emitter *e, Obstacle **o, Wind *w, int size){
 		 (p->loc[0] >= o[k]->coords[0] && p->loc[0] <= o[k]->coords[1]) &&
 		 (p->loc[1] >= o[k]->coords[2] && p->loc[1] <= o[k]->coords[3])){
 		p->loc[2] = p->loc[2] -  dSpeed[2];
-		printf("front collision \n");
 	      }
 	    }
 	  }
         //particle_print(p,stdout);
         for (i = 0; i < 3; i++)
             p->loc[i] = p->loc[i] +dSpeed[i];
-        
 	}
       }
     }
   }
   else{
-    emitter_setup(e);
+    //emitter_setup(e, 1000);
+    emitter_setup(e, 150);
   }
   //printf("Exiting Emitter_update");
 }
@@ -192,8 +231,8 @@ void emitter_draw( Emitter *e ){
   int i;
   glBegin(GL_BLEND);
   if(e->setup){
-    //draw active particles
     for(i = 0; i < e->pSize; i++){
+      //draw active particles
       if(e->pList[i].life > 0 && e->pList[i].waitTime == 0){
         glPushMatrix();
         glColor4f(e->pList[i].color[0], e->pList[i].color[1], 
@@ -202,10 +241,22 @@ void emitter_draw( Emitter *e ){
         glutSolidSphere(0.001, 10, 10);
         glPopMatrix();
       }
+      //draw burnt particles
+      else{
+	if(e->pList[i].burnt == 1){
+	  //printf("Burnt \n");
+	  glPushMatrix();
+	  glColor4f(0.0, 0.0, 0.0, 1.0);
+	  glTranslatef(e->pList[i].loc[0], e->pList[i].loc[1], e->pList[i].loc[2]);
+	  glutSolidSphere(0.001, 10, 10);
+	  glPopMatrix();
+	}
+      }
     }
   }
   else{
-    emitter_setup(e);
+    //emitter_setup(e, 1000);
+    emitter_setup(e, 150);
   }
   glEnd();
 }

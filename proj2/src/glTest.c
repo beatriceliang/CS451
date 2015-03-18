@@ -22,7 +22,7 @@ void display(void) {
   glLoadIdentity();
   
   // set up the viewing transformation
-  gluLookAt(0.0, 1.0, 5.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0);
+  gluLookAt(-3.0, 1.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0);
   
   // set up the light
   glLightfv(GL_LIGHT0, GL_POSITION, position);
@@ -65,7 +65,7 @@ void reshape(int w, int h) {
 // init function
 void init(void) {
   float loc[3] = {0.0, 0.0, 0.0};
-  float coord1[6] = { -0.05, 0.1, 0.3, 0.3, -0.05, 0.05 };
+  float coord1[6] = { 0.1, 0.1, -0.5, 0.5, -0.05, 0.05 };
   float coord2[6] = { -0.05, 0.025, 0.15, 0.15, -0.05, 0.05 };
   float speed[3] = {0.00002, 0, 0.0};//{0.2,0.0,0.3};
   float wloc[3] = {0.06, 0.5, 0.0};//{0.05,0.2,0};
@@ -82,8 +82,9 @@ void init(void) {
   o2 = obstacle_create();
 
   w = wind_create();
-  emitter_set(e, loc, 500000);
-  obstacle_set(o1, coord1, 0 );
+  //emitter_set(e, loc, 5000000);
+  emitter_set(e, loc, 50000);
+  obstacle_set(o1, coord1, 1 );
   obstacle_set(o2, coord2, 0 );
   oList[0] = o1;
   oList[1] = o2;

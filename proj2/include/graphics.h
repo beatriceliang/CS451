@@ -12,6 +12,7 @@ typedef struct{
   int life; //lifetime left
   int waitTime;//rounds until active
   float speed[3]; //velocity
+  int burnt; //0 if not, 1 if yes
 } Particle;
 
 typedef struct{
@@ -51,7 +52,7 @@ void emitter_set( Emitter *e, float *loc, int pSize);
 void emitter_clear( Emitter *e );
 void emitter_free( Emitter *e );
 void emitter_update( Emitter *e, Obstacle **o, Wind *w, int size );
-void emitter_setup( Emitter *e );
+void emitter_setup( Emitter *e, int life );
 void emitter_draw( Emitter *e );
 
 /* Obstacle */
