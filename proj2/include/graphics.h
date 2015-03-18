@@ -23,7 +23,7 @@ typedef struct{
 
 typedef struct{
   float coords[6];
-  float force[3];
+  float force;
   int type; // 0: horizontal, 1: Vertical in z , 2: Vertical in x
 } Obstacle;
 
@@ -46,12 +46,14 @@ void emitter_init( Emitter *e );
 void emitter_set( Emitter *e, float *loc, int pSize);
 void emitter_clear( Emitter *e );
 void emitter_free( Emitter *e );
-void emitter_update( Emitter *e );
+void emitter_update( Emitter *e, Obstacle *o );
 void emitter_setup( Emitter *e );
 void emitter_draw( Emitter *e );
 
 /* Obstacle */
 Obstacle *obstacle_create(void);
+void obstacle_free( Obstacle *o );
 void obstacle_init( Obstacle *o );
 void obstacle_set( Obstacle *o, float *xyz, float speed, int type );
+void obstacle_draw( Obstacle *o );
 #endif

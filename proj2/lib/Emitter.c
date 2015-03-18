@@ -79,14 +79,107 @@ void emitter_setup( Emitter *e ){
 }
 
 /* Update the particles in the emitter */
-void emitter_update( Emitter *e ){
+void emitter_update( Emitter *e, Obstacle *o){
   //printf("Entering Emitter_update");
-  int i;
+  int i, j, k;
+  float dist;
+  Particle *p;
+  int x,y,z; //0 if no collision in specified direction
 
+  x = 0; y = 0; z = 0;
   if(e->setup){
     //loop through active particles
-    for(i = 0; i < e->pSize; i++){
-      particle_update(&e->pList[i]);
+    for(j = 0; j < e->pSize; j++){
+      p = &e->pList[j];
+      // dead particle
+      if( p->life != 0 ){
+	// waiting particle
+	if( p->waitTime > 0 )
+	  p->waitTime--;
+	else{
+	  //active particle w/ life
+	  p->life--;
+	  for (i = 0; i < 3; i++){
+	    p->speed[i] = 
+	      p->speed[i]+((float)rand()/(float)(RAND_MAX)-0.5)/7000.0;
+	  }
+	  dist = p->loc[0]*p->loc[0]+p->loc[1]*p->loc[1]+p->loc[2]*p->loc[2];
+	  //changes colors of particles so they get redder as they get further from the emitter
+	  for(i= 0; i <3; i++){
+	    p->color[i] = 1.0/ ((dist*(float)(i+0.1)+1)*(dist*(float)(i+0.1)+1)*(dist*(float)(i+0.1)+1));
+	  }
+	  //looping through obstacles
+	  for(k=0; k <1; k++){
+	    // printf("Entering \n");
+	    //collides from the left
+	    if(p->loc[0] <= o[k].coords[0] && 
+	       (p->loc[0] + p->speed[0]) >= o[k].coords[0]&& 
+	       (p->loc[1] >= o[k].coords[2] && p->loc[1] <= o[k].coords[3]) &&
+	       (p->loc[2] >= o[k].coords[4] && p->loc[2] <= o[k].coords[5])){
+	      p->loc[0] = p->loc[0] - o[k].force;
+	      x++;
+	      printf("left collision \n");
+	    }
+	    //collides from the right
+	    else {
+	      if(p->loc[0] >= o[k].coords[1] && 
+		 (p->loc[0] + p->speed[0]) <= o[k].coords[1]&& 
+		 (p->loc[1] >= o[k].coords[2] && p->loc[1] <= o[k].coords[3]) &&
+		 (p->loc[2] >= o[k].coords[4] && p->loc[2] <= o[k].coords[5])){
+		p->loc[0] = p->loc[0] + o[k].force;
+		x++;
+		printf("right collision \n");
+	      }
+	    }
+	    //collides from the bottom and in the region of plane
+	    if(p->loc[1] <= o[k].coords[2] && 
+	       (p->loc[1] + p->speed[1]) >= o[k].coords[2] && 
+	       (p->loc[0] >= o[k].coords[0] && p->loc[0] <= o[k].coords[1]) &&
+	       (p->loc[2] >= o[k].coords[4] && p->loc[2] <= o[k].coords[5])){
+	      p->loc[1] = p->loc[1] - o[k].force;
+	      y++;
+	      //printf("colliding from bottom \n");
+	    }
+	    //collides from the top
+	    else{ 
+	      if(p->loc[1] >= o[k].coords[3] && 
+		 (p->loc[1] + p->speed[1]) <= o[k].coords[3]&& 
+		 (p->loc[0] >= o[k].coords[0] && p->loc[0] <= o[k].coords[1]) &&
+		 (p->loc[2] >= o[k].coords[4] && p->loc[2] <= o[k].coords[5])){
+		p->loc[1] = p->loc[1] + o[k].force;
+		y++;
+		printf("top collision \n");
+	      }
+	    }
+	    //collides from the back
+	    if(p->loc[2] <= o[k].coords[4] && 
+	       (p->loc[2] + p->speed[2]) >= o[k].coords[4]&& 
+	       (p->loc[0] >= o[k].coords[0] && p->loc[0] <= o[k].coords[1]) &&
+	       (p->loc[1] >= o[k].coords[2] && p->loc[1] <= o[k].coords[3])){
+	      p->loc[2] = p->loc[2] - o[k].force;
+	      z++;
+	      printf("back collision \n");
+	    }
+	    //collides from the front
+	    else{ 
+	      if(p->loc[2] >= o[k].coords[5] && 
+		 (p->loc[2] + p->speed[2]) <= o[k].coords[5]&& 
+		 (p->loc[0] >= o[k].coords[0] && p->loc[0] <= o[k].coords[1]) &&
+		 (p->loc[1] >= o[k].coords[2] && p->loc[1] <= o[k].coords[3])){
+		p->loc[2] = p->loc[2] + o[k].force;
+		z++;
+		printf("front collision \n");
+	      }
+	    }
+	  }
+	  if(x == 0)
+	    p->loc[0] = p->loc[0] + p->speed[0];
+	  if(y == 0)
+	    p->loc[1] = p->loc[1] + p->speed[1];
+	  if(z == 0)
+	    p->loc[2] = p->loc[2] + p->speed[2]; 
+	}
+      }
     }
   }
   else{
@@ -98,7 +191,7 @@ void emitter_update( Emitter *e ){
 void emitter_draw( Emitter *e ){
   //printf("Entering Emitter_draw");
   int i;
-    glBegin(GL_BLEND);
+  glBegin(GL_BLEND);
   if(e->setup){
     //draw active particles
     for(i = 0; i < e->pSize; i++){
@@ -115,6 +208,5 @@ void emitter_draw( Emitter *e ){
   else{
     emitter_setup(e);
   }
-  //printf("Exiting Emitter_draw");
-    glEnd();
+  glEnd();
 }

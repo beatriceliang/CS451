@@ -5,6 +5,7 @@
 #include "graphics.h"
 
 Emitter *e;
+Obstacle *o;
 
 // Function for drawing the contents of the screen
 void display(void) {
@@ -19,7 +20,7 @@ void display(void) {
   glLoadIdentity();
   
   // set up the viewing transformation
-  gluLookAt(0.0, 0.0, 8.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0);
+  gluLookAt(0.0, 0.0, 5.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0);
   
   // set up the light
   glLightfv(GL_LIGHT0, GL_POSITION, position);
@@ -28,8 +29,9 @@ void display(void) {
   //glutSolidSphere(1.0, 32, 32);
   
   //printf("Before emit stuff\n");
-  emitter_update(e);
+  emitter_update(e, o);
   emitter_draw(e);
+  obstacle_draw(o);
   // draw everything
   glFlush();
   usleep(10000);
@@ -61,6 +63,7 @@ void reshape(int w, int h) {
 // init function
 void init(void) {
   float loc[3] = {0.0, 0.0, 0.0};
+  float coord[6] = { -0.05, 0.05, 0.1, 0.1, -0.05, 0.05 };
   // background color
   glClearColor(0.0, 0.0, 0.0, 0.0);
 
@@ -70,8 +73,10 @@ void init(void) {
   //initlights();
   //printf("Before seg?\n");
   e = emitter_create();
+  o = obstacle_create();
   emitter_set(e, loc, 500000);
-    
+  obstacle_set(o, coord, 0.03, 0 );
+  glEnable(GL_DEPTH_TEST);
   //printf("After seg?\n");
 }
 
@@ -82,6 +87,7 @@ void keyboard(unsigned char key, int x, int y)
    switch( key) {
    case 'q': // quit
      emitter_free(e);
+     obstacle_free(o);
      exit(0);
      break;
    default:
