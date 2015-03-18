@@ -27,6 +27,11 @@ typedef struct{
   int type; // 0: horizontal, 1: Vertical in z , 2: Vertical in x
 } Obstacle;
 
+typedef struct{
+    float coords[3];
+    float speed[3];
+} Wind;
+
 /* Particle */
 Particle *particle_create( void );
 Particle *particle_createp(float *location, float *c, 
@@ -46,7 +51,7 @@ void emitter_init( Emitter *e );
 void emitter_set( Emitter *e, float *loc, int pSize);
 void emitter_clear( Emitter *e );
 void emitter_free( Emitter *e );
-void emitter_update( Emitter *e, Obstacle *o );
+void emitter_update( Emitter *e, Obstacle *o, Wind *w );
 void emitter_setup( Emitter *e );
 void emitter_draw( Emitter *e );
 
@@ -56,4 +61,11 @@ void obstacle_free( Obstacle *o );
 void obstacle_init( Obstacle *o );
 void obstacle_set( Obstacle *o, float *xyz, float speed, int type );
 void obstacle_draw( Obstacle *o );
+
+/* Wind */
+Wind *wind_create(void);
+void wind_free( Wind *o );
+void wind_init( Wind *o );
+void wind_set( Wind *o, float *xyz, float *speed);
+
 #endif

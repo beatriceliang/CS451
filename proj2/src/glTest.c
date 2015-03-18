@@ -6,6 +6,7 @@
 
 Emitter *e;
 Obstacle *o;
+Wind *w;
 
 // Function for drawing the contents of the screen
 void display(void) {
@@ -29,7 +30,7 @@ void display(void) {
   //glutSolidSphere(1.0, 32, 32);
   
   //printf("Before emit stuff\n");
-  emitter_update(e, o);
+  emitter_update(e, o, w);
   emitter_draw(e);
   obstacle_draw(o);
   // draw everything
@@ -63,7 +64,9 @@ void reshape(int w, int h) {
 // init function
 void init(void) {
   float loc[3] = {0.0, 0.0, 0.0};
-  float coord[6] = { -0.05, 0.05, 0.1, 0.1, -0.05, 0.05 };
+  float coord[6] = { -0.05, 0.05, 0.3, 0.3, -0.05, 0.05 };
+    float speed[3] = {0.003, 0, 0.0};//{0.2,0.0,0.3};
+    float wloc[3] = {2.0, 0.0, 0.0};//{0.05,0.2,0};
   // background color
   glClearColor(0.0, 0.0, 0.0, 0.0);
 
@@ -74,8 +77,10 @@ void init(void) {
   //printf("Before seg?\n");
   e = emitter_create();
   o = obstacle_create();
+  w = wind_create();
   emitter_set(e, loc, 500000);
-  obstacle_set(o, coord, 0.03, 0 );
+  obstacle_set(o, coord, 0, 0 );
+  wind_set(w, wloc,speed);
   glEnable(GL_DEPTH_TEST);
   //printf("After seg?\n");
 }
@@ -88,6 +93,7 @@ void keyboard(unsigned char key, int x, int y)
    case 'q': // quit
      emitter_free(e);
      obstacle_free(o);
+     wind_free(w);
      exit(0);
      break;
    default:
