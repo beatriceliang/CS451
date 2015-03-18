@@ -117,6 +117,7 @@ void particle_update( Particle *p ){
         p->speed[i] = p->speed[i]+((float)rand()/(float)(RAND_MAX)-0.5)/7000.0;
     }
     dist = p->loc[0]*p->loc[0]+p->loc[1]*p->loc[1]+p->loc[2]*p->loc[2];
+    //changes colors of particles so they get redder as they get further from the emitter
     for(i= 0; i <3; i++){
         p->color[i] = 1.0/ ((dist*(float)(i+0.1)+1)*(dist*(float)(i+0.1)+1)*(dist*(float)(i+0.1)+1));
     }
