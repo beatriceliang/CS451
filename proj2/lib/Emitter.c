@@ -46,6 +46,11 @@ void emitter_set( Emitter *e, float *loc, int pSize){
   //printf("Entering Emitter_set");
 }
 
+void emitter_move( Emitter *e, float dx, float dy, float dz ){
+  e->loc[0] = e->loc[0]+dx;
+  e->loc[1] = e->loc[1]+dy;
+  e->loc[2] = e->loc[2]+dz;
+}
 void emitter_clear( Emitter *e ){
   if(e->pList)
     free(e->pList);
@@ -87,8 +92,6 @@ void emitter_update( Emitter *e, Obstacle **o, Wind *w, int size){
   float dSpeed[3];
   Particle *p;
   int x,y,z; //0 if no collision in specified direction
-    
-   
     
   x = 0; y = 0; z = 0;
   if(e->setup){
@@ -144,8 +147,13 @@ void emitter_update( Emitter *e, Obstacle **o, Wind *w, int size){
       // particle w/life
       else{
 	// waiting particle
-	if( p->waitTime > 0 )
+	if( p->waitTime > 0 ){
 	  p->waitTime--;
+	  //update waiting particle location. Emitter may move over time
+	  p->loc[0] = e->loc[0];
+	  p->loc[1] = e->loc[1];
+	  p->loc[2] = e->loc[2];
+	}
 	else{
 	  //active particle w/ life
 	  p->life--;

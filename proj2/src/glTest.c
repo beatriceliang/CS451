@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <sys/time.h>
 #include <GL/gl.h>
 #include <GL/glut.h>
 #include "graphics.h"
@@ -11,6 +12,25 @@ Wind *w;
 
 // Function for drawing the contents of the screen
 void display(void) {
+  static starttime = 0.0;
+  struct timeval tp;
+  struct timezone tz;
+  double curtime, delta;
+
+  // move emitter down every 5s
+  gettimeofday( &tp, &tz );
+  curtime = tp.tv_sec + tp.tv_usec/1000000.0;
+  if(starttime == 0.0) {
+    starttime = curtime;
+  }
+  delta = curtime - starttime;
+  //printf("moving down %f\n", ((int)(delta * 1000) % 5000)*360.0 / 5000.0);
+  if( ((int)(delta * 1000) % 5000)*360.0 / 5000.0 < 10 ){
+    //emitter_move(e, 0.0, -0.5, 0.0);
+    e->loc[1] = e->loc[1]-0.05;
+    //printf("moving down\n");
+  }
+
   //printf("Entering display\n");
   GLfloat position[] = {10.0, 5.0, 20.0, 1.0};
   int i;

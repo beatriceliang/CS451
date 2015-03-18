@@ -18,6 +18,7 @@ Particle *particle_create( void ){
     return NULL;
   }
   p->life = 0;
+  p->burnt = 0;
   return p;
 }
 
@@ -43,7 +44,7 @@ Particle *particle_createp(float *location, float *c,
   p->speed[0] = velocity[0];
   p->speed[1] = velocity[1];
   p->speed[2] = velocity[2];
-
+  p->burnt = 0;
   return p;
 }
 
@@ -57,6 +58,7 @@ void particle_free(Particle *p){
 /* initializes the existing Particle to an empty Particle */
 void particle_init(Particle *p){
   p->life = 0;
+  p->burnt = 0;
 }
 
 
@@ -72,6 +74,7 @@ void particle_set(Particle *p, float *location, float *c,
   p->color[3] = c[3];
   p->waitTime = wait;
   p->life = l;
+  p->burnt = 0;
   p->speed[0] = velocity[0];
   p->speed[1] = velocity[1];
   p->speed[2] = velocity[2];
@@ -97,34 +100,4 @@ void particle_copy(Particle *to, Particle *from){
 void particle_print(Particle *p, FILE*fp){
   fprintf(fp, " ( %lf, %lf, %lf ) \n", 
 	  p->loc[0], p->loc[1], p->loc[2]);
-}
-  
-/* Updates the particle */
-void particle_update( Particle *p ){
-    int i;
-    float dist;
-  // dead particle
-  if( p->life == 0 )
-    return;
-  // waiting particle
-  if( p->waitTime > 0 ){
-    p->waitTime--;
-    return;
-  }
-  //active particle w/ life
-  p->life--;
-    for (i = 0; i < 3; i++){
-        p->speed[i] = p->speed[i]+((float)rand()/(float)(RAND_MAX)-0.5)/7000.0;
-    }
-    dist = p->loc[0]*p->loc[0]+p->loc[1]*p->loc[1]+p->loc[2]*p->loc[2];
-    //changes colors of particles so they get redder as they get further from the emitter
-    for(i= 0; i <3; i++){
-        p->color[i] = 1.0/ ((dist*(float)(i+0.1)+1)*(dist*(float)(i+0.1)+1)*(dist*(float)(i+0.1)+1));
-    }
-    
-
-  p->loc[0] = p->loc[0] + p->speed[0];
-  p->loc[1] = p->loc[1] + p->speed[1];
-  p->loc[2] = p->loc[2] + p->speed[2];
-  //particle_print(p, stdout);
 }

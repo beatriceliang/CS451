@@ -49,6 +49,7 @@ void particle_update( Particle *p );
 Emitter *emitter_create( void );
 void emitter_init( Emitter *e );
 void emitter_set( Emitter *e, float *loc, int pSize);
+void emitter_move( Emitter *e, float dx, float dy, float dz );
 void emitter_clear( Emitter *e );
 void emitter_free( Emitter *e );
 void emitter_update( Emitter *e, Obstacle **o, Wind *w, int size );
