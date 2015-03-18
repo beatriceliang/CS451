@@ -58,35 +58,6 @@ void reshape(int w, int h) {
   glLoadIdentity();
 }
 
-// initialize the lighting and material color values
-void initlights(void) {
-	GLfloat ambient[] = {0.1, 0.1, 0.1, 1.0};
-  GLfloat diffuse[] = {0.9, 0.9, 0.9, 1.0};
-	GLfloat specular[] = {0.5, 0.5, 0.5, 1.0};
-  GLfloat mat_diffuse[] = {0.3, 0.9, 0.5, 1.0};
-  GLfloat mat_specular[] = {0.1, 0.1, 0.1, 1.0};
-  GLfloat mat_shininess[] = {50.0};
-
-	// material values
-	glMaterialfv(GL_FRONT, GL_DIFFUSE, mat_diffuse);
-  glMaterialfv(GL_FRONT, GL_SPECULAR, mat_specular);
-  glMaterialfv(GL_FRONT, GL_SHININESS, mat_shininess);
-
-	// generic lighting values
-  glLightModeli(GL_LIGHT_MODEL_LOCAL_VIEWER, 1);
-  glLightModelfv(GL_LIGHT_MODEL_AMBIENT, ambient);
-  
-  // specific light source
-  glLightfv(GL_LIGHT0, GL_DIFFUSE, diffuse);
-  glLightfv(GL_LIGHT0, GL_SPECULAR, specular );
-
-	// enable lighting, light0 and depth testing
-  glEnable(GL_LIGHTING);
-  glEnable(GL_LIGHT0);
-  glEnable(GL_DEPTH_TEST); // important, or you can see through the sphere
-
-}
-
 // init function
 void init(void) {
   float loc[3] = {0.0, 0.0, 0.0};
@@ -96,10 +67,10 @@ void init(void) {
   // whether shading is smooth or flat
   glShadeModel(GL_SMOOTH);
 
-  initlights();
+  //initlights();
   //printf("Before seg?\n");
   e = emitter_create();
-  emitter_set(e, loc, 10000);
+  emitter_set(e, loc, 500000);
     
   //printf("After seg?\n");
 }

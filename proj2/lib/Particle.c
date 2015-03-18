@@ -113,7 +113,7 @@ void particle_update( Particle *p ){
   //active particle w/ life
   p->life--;
     for (i = 0; i < 3; i++){
-        p->speed[i] = p->speed[i] / (1.02);
+        p->speed[i] = p->speed[i]+((float)rand()/(float)(RAND_MAX)-0.5)/7000.0;
     }
   p->loc[0] = p->loc[0] + p->speed[0];
   p->loc[1] = p->loc[1] + p->speed[1];

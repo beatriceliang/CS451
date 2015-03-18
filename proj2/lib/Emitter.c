@@ -66,19 +66,13 @@ void emitter_setup( Emitter *e ){
   //printf("Entering Emitter_setup");
   int i;
   float v[3];
-  float c[3] = {0.2, 0.2, 0.2};
+  float c[3] = {0.7, 0.3, 0.3};
 
   for(i=0; i < e->pSize; i++){
-      v[0] = ((float)rand()/(float)(RAND_MAX)-0.5)/40.0;
-      v[1] = ((float)rand()/(float)(RAND_MAX))/5.0;
-      v[2] = ((float)rand()/(float)(RAND_MAX)-0.5)/40.0;
-     while (v[0]*v[0] + v[2] * v[2]> 0.05){
-         v[0] = ((float)rand()/(float)(RAND_MAX)-0.5)/40.0;
-         v[1] = ((float)rand()/(float)(RAND_MAX))/5.0;
-         v[2] = ((float)rand()/(float)(RAND_MAX)-0.5)/40.0;
-         printf("(%.6f)\n",v[0]*v[0] +v[2] * v[2]);
-     }
-    particle_set( &e->pList[i], e->loc, c, 200, i, v);
+      v[0] = ((float)rand()/(float)(RAND_MAX)-0.5)/2000.0;
+      v[1] = ((float)rand()/(float)(RAND_MAX))/250;
+      v[2] = ((float)rand()/(float)(RAND_MAX)-0.5)/2000.0;
+      particle_set( &e->pList[i], e->loc, c, 5000, i%(e->pSize/200), v);
   }
   e->setup = 1;
   //printf("Exiting Emitter_setup");
@@ -113,7 +107,7 @@ void emitter_draw( Emitter *e ){
         glColor4f(e->pList[i].color[0], e->pList[i].color[1], 
         e->pList[i].color[2], e->pList[i].color[3]);
         glTranslatef(e->pList[i].loc[0], e->pList[i].loc[1], e->pList[i].loc[2]);
-        glutSolidSphere(0.01, 10, 10);
+        glutSolidSphere(0.001, 10, 10);
         glPopMatrix();
       }
     }
