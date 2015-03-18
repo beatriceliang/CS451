@@ -12,6 +12,7 @@ typedef struct{
   int life; //lifetime left
   int waitTime;//rounds until active
   float speed[3]; //velocity
+  int burnt; //0 if not, 1 if yes
 } Particle;
 
 typedef struct{
@@ -20,6 +21,16 @@ typedef struct{
   Particle *pList; //list of particles emitted
   int setup; //0 if false and 1 if true
 } Emitter;
+
+typedef struct{
+  float coords[6];
+  int type; // 0: horizontal, 1: Vertical in z , 2: Vertical in x
+} Obstacle;
+
+typedef struct{
+    float coords[3];
+    float speed[3];
+} Wind;
 
 /* Particle */
 Particle *particle_create( void );
@@ -40,7 +51,21 @@ void emitter_init( Emitter *e );
 void emitter_set( Emitter *e, float *loc, int pSize);
 void emitter_clear( Emitter *e );
 void emitter_free( Emitter *e );
-void emitter_update( Emitter *e );
-void emitter_setup( Emitter *e );
+void emitter_update( Emitter *e, Obstacle **o, Wind *w, int size );
+void emitter_setup( Emitter *e, int life );
 void emitter_draw( Emitter *e );
+
+/* Obstacle */
+Obstacle *obstacle_create(void);
+void obstacle_free( Obstacle *o );
+void obstacle_init( Obstacle *o );
+void obstacle_set( Obstacle *o, float *xyz, int type );
+void obstacle_draw( Obstacle **o, int size );
+
+/* Wind */
+Wind *wind_create(void);
+void wind_free( Wind *o );
+void wind_init( Wind *o );
+void wind_set( Wind *o, float *xyz, float *speed);
+
 #endif

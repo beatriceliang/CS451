@@ -5,10 +5,13 @@
 #include "graphics.h"
 
 Emitter *e;
+Obstacle * oList[2];
+Obstacle *o1, *o2;
+Wind *w;
 
 // Function for drawing the contents of the screen
 void display(void) {
-  printf("Entering display\n");
+  //printf("Entering display\n");
   GLfloat position[] = {10.0, 5.0, 20.0, 1.0};
   int i;
   // clear screen
@@ -19,7 +22,7 @@ void display(void) {
   glLoadIdentity();
   
   // set up the viewing transformation
-  gluLookAt(0.0, 0.0, 8.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0);
+  gluLookAt(-3.0, 1.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0);
   
   // set up the light
   glLightfv(GL_LIGHT0, GL_POSITION, position);
@@ -27,9 +30,10 @@ void display(void) {
   // set up a sphere
   //glutSolidSphere(1.0, 32, 32);
   
-  printf("Before emit stuff\n");
-  emitter_update(e);
+  //printf("Before emit stuff\n");
+  emitter_update(e, oList, w, 2);
   emitter_draw(e);
+  obstacle_draw(oList, 2);
   // draw everything
   glFlush();
   usleep(10000);
@@ -58,49 +62,35 @@ void reshape(int w, int h) {
   glLoadIdentity();
 }
 
-// initialize the lighting and material color values
-void initlights(void) {
-	GLfloat ambient[] = {0.1, 0.1, 0.1, 1.0};
-  GLfloat diffuse[] = {0.9, 0.9, 0.9, 1.0};
-	GLfloat specular[] = {0.5, 0.5, 0.5, 1.0};
-  GLfloat mat_diffuse[] = {0.3, 0.9, 0.5, 1.0};
-  GLfloat mat_specular[] = {0.1, 0.1, 0.1, 1.0};
-  GLfloat mat_shininess[] = {50.0};
-
-	// material values
-	glMaterialfv(GL_FRONT, GL_DIFFUSE, mat_diffuse);
-  glMaterialfv(GL_FRONT, GL_SPECULAR, mat_specular);
-  glMaterialfv(GL_FRONT, GL_SHININESS, mat_shininess);
-
-	// generic lighting values
-  glLightModeli(GL_LIGHT_MODEL_LOCAL_VIEWER, 1);
-  glLightModelfv(GL_LIGHT_MODEL_AMBIENT, ambient);
-  
-  // specific light source
-  glLightfv(GL_LIGHT0, GL_DIFFUSE, diffuse);
-  glLightfv(GL_LIGHT0, GL_SPECULAR, specular );
-
-	// enable lighting, light0 and depth testing
-  glEnable(GL_LIGHTING);
-  glEnable(GL_LIGHT0);
-  glEnable(GL_DEPTH_TEST); // important, or you can see through the sphere
-
-}
-
 // init function
 void init(void) {
   float loc[3] = {0.0, 0.0, 0.0};
+  float coord1[6] = { 0.1, 0.1, -0.5, 0.5, -0.05, 0.05 };
+  float coord2[6] = { -0.05, 0.025, 0.15, 0.15, -0.05, 0.05 };
+  float speed[3] = {0.00002, 0, 0.0};//{0.2,0.0,0.3};
+  float wloc[3] = {0.06, 0.5, 0.0};//{0.05,0.2,0};
   // background color
   glClearColor(0.0, 0.0, 0.0, 0.0);
 
   // whether shading is smooth or flat
   glShadeModel(GL_SMOOTH);
 
-  initlights();
-  printf("Before seg?\n");
+  //initlights();
+  //printf("Before seg?\n");
   e = emitter_create();
-  emitter_set(e, loc, 10);
-  printf("After seg?\n");
+  o1 = obstacle_create();
+  o2 = obstacle_create();
+
+  w = wind_create();
+  //emitter_set(e, loc, 5000000);
+  emitter_set(e, loc, 50000);
+  obstacle_set(o1, coord1, 1 );
+  obstacle_set(o2, coord2, 0 );
+  oList[0] = o1;
+  oList[1] = o2;
+  wind_set(w, wloc,speed);
+  glEnable(GL_DEPTH_TEST);
+  //printf("After seg?\n");
 }
 
 //  This function is called whenever a key event occurs.
@@ -110,6 +100,9 @@ void keyboard(unsigned char key, int x, int y)
    switch( key) {
    case 'q': // quit
      emitter_free(e);
+     obstacle_free(o1);
+     obstacle_free(o2);
+     wind_free(w);
      exit(0);
      break;
    default:
