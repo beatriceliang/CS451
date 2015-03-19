@@ -147,14 +147,9 @@ void emitter_update( Emitter *e, Obstacle **o, Wind *w, int size){
       // particle w/life
       else{
 	// waiting particle
-	if( p->waitTime > 0 ){
+	if( p->waitTime > 0 )
 	  p->waitTime--;
-	  //update waiting particle location. Emitter may move over time
-	  p->loc[0] = e->loc[0];
-	  p->loc[1] = e->loc[1];
-	  p->loc[2] = e->loc[2];
-	}
-	else{
+    else{
 	  //active particle w/ life
 	  p->life--;
         wdist = (w->coords[0]- p->loc[0])*(w->coords[0]- p->loc[0])+(w->coords[1]- p->loc[1])*(w->coords[1]- p->loc[1])+(w->coords[2]- p->loc[2])*(w->coords[2]- p->loc[2]);

@@ -12,7 +12,7 @@
 #define TextureHeight 512
 #define TextureNumber 2
 
-GLubyte texData[TextureNumber][TextureHeight][TextureWidth][2];
+GLubyte texData[TextureNumber][TextureHeight][TextureWidth][4];
 GLuint texName[TextureNumber];
 
 Emitter * eList[4];
@@ -76,49 +76,13 @@ void drawCake( void ){
     glTranslatef( 1.3f, 0.0f, -1.3f );
     drawCylinder( 0.075f, 0.9f, 10);
     glTranslatef( -2.6f, 0.0f, 0.0f );
-    drawCylinder( 0.075f, 0.9f, 10);/*
-    glTranslatef( 1.95f, 0.0f, 1.125f );//0.65 & 1.125
-    drawCylinder( 0.075f, 1.5f, 10);
-    glTranslatef( -1.3f, 0.0f, -2.25f );
-    drawCylinder( 0.075f, 1.5f, 10);
-    glTranslatef( 1.775f, 0.0f, 1.775f );
-    drawCylinder( 0.075f, 1.5f, 10);
-    glTranslatef( -2.25f, 0.0f, -1.3f );
-    drawCylinder( 0.075f, 1.5f, 10);
-    glTranslatef( 2.25f, 0.0f, 0.0f );
-    drawCylinder( 0.075f, 1.5f, 10);
-    glTranslatef( -2.25f, 0.0f, 1.3f );
-    drawCylinder( 0.075f, 1.5f, 10);
-    glTranslatef( 1.775f, 0.0f, -1.775f );
-    drawCylinder( 0.075f, 1.5f, 10);
-    glTranslatef( -1.3f, 0.0f, 2.25f );
-    drawCylinder( 0.075f, 1.5f, 10);*/
+    drawCylinder( 0.075f, 0.9f, 10);
     glPopMatrix();
 }
 
 
 // Function for drawing the contents of the screen
 void display(void) {
-    /*
-    static starttime = 0.0;
-    struct timeval tp;
-    struct timezone tz;
-    double curtime, delta;
-    
-    // move emitter down every 5s
-    gettimeofday( &tp, &tz );
-    curtime = tp.tv_sec + tp.tv_usec/1000000.0;
-    if(starttime == 0.0) {
-        starttime = curtime;
-    }
-    delta = curtime - starttime;
-    //printf("moving down %f\n", ((int)(delta * 1000) % 5000)*360.0 / 5000.0);
-    if( ((int)(delta * 1000) % 5000)*360.0 / 5000.0 < 10 ){
-        //emitter_move(e, 0.0, -0.5, 0.0);
-        e->loc[1] = e->loc[1]-0.05;
-        //printf("moving down\n");
-    }
-    */
     
     GLfloat position[] = {10.0, 5.0, 20.0, 1.0};
     int i;
@@ -142,16 +106,15 @@ void display(void) {
     glBindTexture(GL_TEXTURE_2D, texName[0]);
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, TextureWidth, TextureHeight, 0, GL_RGBA, GL_UNSIGNED_BYTE, texData[0]);
     
-    //GLUquadricObj *quadObj = gluNewQuadric();
-    //gluCylinder(quadObj, 1, 1, 1, 20, 13);
-    //drawCircle( 0, 0, 0, 1, 20 );
+    
     drawCake();
-    //printf("Before emit stuff\n");
+    
     glBindTexture(GL_TEXTURE_2D, 0);
     for(i = 0; i < 4; i++){
         emitter_update(eList[i], NULL, w, 0);
         emitter_draw(eList[i]);
     }
+    
     // draw everything
     glFlush();
     usleep(10000);

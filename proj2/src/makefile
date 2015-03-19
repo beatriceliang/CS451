@@ -29,10 +29,10 @@ _DEPS = graphics.h tiff-util.h
 DEPS = $(patsubst %,$(INCDIR)/%,$(_DEPS))
 
 # put a list of the executables here
-EXECUTABLES = glTest cake
+EXECUTABLES = glTest cake collision
 
 # put a list of all the object files here for all executables (with .o endings)
-_OBJ = glTest.o cake.o
+_OBJ = glTest.o cake.o collision.o
 
 # convert them to point to the right place
 OBJ = $(patsubst %,$(ODIR)/%,$(_OBJ))
@@ -54,6 +54,9 @@ all:
 
 # put the specific executable rules here
 cake: cake.o 
+	$(CC) -o $(BINDIR)/$@ $^ $(LFLAGS) $(LIBS) $(CFLAGS) -ltiff
+
+collision: collision.o 
 	$(CC) -o $(BINDIR)/$@ $^ $(LFLAGS) $(LIBS) $(CFLAGS) -ltiff
 
 gltest: $(ODIR)/glTest.o
