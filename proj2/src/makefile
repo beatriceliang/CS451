@@ -29,10 +29,10 @@ _DEPS = graphics.h tiff-util.h
 DEPS = $(patsubst %,$(INCDIR)/%,$(_DEPS))
 
 # put a list of the executables here
-EXECUTABLES = glTest cake collision wind
+EXECUTABLES = cake collision wind burn
 
 # put a list of all the object files here for all executables (with .o endings)
-_OBJ = glTest.o cake.o collision.o wind.o
+_OBJ = cake.o collision.o wind.o burn.o
 
 # convert them to point to the right place
 OBJ = $(patsubst %,$(ODIR)/%,$(_OBJ))
@@ -53,16 +53,16 @@ all:
 	for i in $(EXECUTABLES); do (make $$i) ; done
 
 # put the specific executable rules here
-cake: cake.o 
+burn: $(ODIR)/burn.o 
+	$(CC) -o $(BINDIR)/$@ $^ $(LFLAGS) $(LIBS) $(CFLAGS)
+
+cake: $(ODIR)/cake.o 
 	$(CC) -o $(BINDIR)/$@ $^ $(LFLAGS) $(LIBS) $(CFLAGS) -ltiff
 
-collision: collision.o 
+collision: $(ODIR)/collision.o 
 	$(CC) -o $(BINDIR)/$@ $^ $(LFLAGS) $(LIBS) $(CFLAGS)
 
-gltest: $(ODIR)/glTest.o
-	$(CC) -o $(BINDIR)/$@ $^ $(LFLAGS) $(LIBS) $(CFLAGS)
-
-wind: wind.o 
+wind: $(ODIR)/wind.o 
 	$(CC) -o $(BINDIR)/$@ $^ $(LFLAGS) $(LIBS) $(CFLAGS)
 
 .PHONY: clean
