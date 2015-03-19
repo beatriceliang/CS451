@@ -1,6 +1,6 @@
 # set the C compiler, for C++ use g++
 # use this setting on most sane machines
-CC = gcc -I/opt/X11/include -L/opt/X11/lib -I/opt/local/include -L/opt/local/lib -I./include
+CC = gcc -I/opt/X11/include -L/opt/X11/lib -I/opt/local/include -L/opt/local/lib -I./include -I/usr/local/Cellar/libtiff/4.0.3/include -L/usr/local/Cellar/libtiff/4.0.3/lib
 
 # set the path to the include directory
 INCDIR =../include
