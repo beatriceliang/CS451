@@ -82,7 +82,6 @@ void init(void) {
     
     //emitter_set(e, loc, 5000000);
     emitter_set(e, loc, 100000);
-    emitter_setup( e, )
     obstacle_set(o1, coord1, 1 );
     obstacle_set(o2, coord2, 0 );
     oList[0] = o1;
