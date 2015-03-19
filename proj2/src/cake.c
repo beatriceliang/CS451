@@ -10,9 +10,9 @@
 
 #define TextureWidth 512
 #define TextureHeight 512
-#define TextureNumber 5
+#define TextureNumber 2
 
-GLubyte texData[TextureNumber][TextureHeight][TextureWidth][4];
+GLubyte texData[TextureNumber][TextureHeight][TextureWidth][2];
 GLuint texName[TextureNumber];
 
 Emitter * eList[4];

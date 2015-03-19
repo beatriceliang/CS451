@@ -29,10 +29,10 @@ _DEPS = graphics.h tiff-util.h
 DEPS = $(patsubst %,$(INCDIR)/%,$(_DEPS))
 
 # put a list of the executables here
-EXECUTABLES = glTest glRoom cake
+EXECUTABLES = glTest cake
 
 # put a list of all the object files here for all executables (with .o endings)
-_OBJ = glTest.o glRoom.o cake.o
+_OBJ = glTest.o cake.o
 
 # convert them to point to the right place
 OBJ = $(patsubst %,$(ODIR)/%,$(_OBJ))
@@ -58,9 +58,6 @@ cake: cake.o
 
 gltest: $(ODIR)/glTest.o
 	$(CC) -o $(BINDIR)/$@ $^ $(LFLAGS) $(LIBS) $(CFLAGS)
-
-glroom: glRoom.o 
-	$(CC) -o $(BINDIR)/$@ $^ $(LFLAGS) $(LIBS) $(CFLAGS) -ltiff
 
 .PHONY: clean
 
