@@ -57,7 +57,7 @@ cake: cake.o
 	$(CC) -o $(BINDIR)/$@ $^ $(LFLAGS) $(LIBS) $(CFLAGS) -ltiff
 
 collision: collision.o 
-	$(CC) -o $(BINDIR)/$@ $^ $(LFLAGS) $(LIBS) $(CFLAGS) -ltiff
+	$(CC) -o $(BINDIR)/$@ $^ $(LFLAGS) $(LIBS) $(CFLAGS)
 
 gltest: $(ODIR)/glTest.o
 	$(CC) -o $(BINDIR)/$@ $^ $(LFLAGS) $(LIBS) $(CFLAGS)
