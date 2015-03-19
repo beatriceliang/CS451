@@ -23,16 +23,16 @@ LIBS = -lm -limageIO
 LFLAGS = -L$(LIBDIR)
 
 # put all of the relevant include files here
-_DEPS = graphics.h
+_DEPS = graphics.h tiff-util.h
 
 # convert them to point to the right place
 DEPS = $(patsubst %,$(INCDIR)/%,$(_DEPS))
 
 # put a list of the executables here
-EXECUTABLES = glTest
+EXECUTABLES = glTest glRoom cake
 
 # put a list of all the object files here for all executables (with .o endings)
-_OBJ = glTest.o
+_OBJ = glTest.o glRoom.o cake.o
 
 # convert them to point to the right place
 OBJ = $(patsubst %,$(ODIR)/%,$(_OBJ))
@@ -53,8 +53,14 @@ all:
 	for i in $(EXECUTABLES); do (make $$i) ; done
 
 # put the specific executable rules here
+cake: cake.o 
+	$(CC) -o $(BINDIR)/$@ $^ $(LFLAGS) $(LIBS) $(CFLAGS) -ltiff
+
 gltest: $(ODIR)/glTest.o
 	$(CC) -o $(BINDIR)/$@ $^ $(LFLAGS) $(LIBS) $(CFLAGS)
+
+glroom: glRoom.o 
+	$(CC) -o $(BINDIR)/$@ $^ $(LFLAGS) $(LIBS) $(CFLAGS) -ltiff
 
 .PHONY: clean
 

@@ -1,6 +1,6 @@
 # set the C compiler, for C++ use g++
 # use this setting on most sane machines
-CC = gcc -I/opt/X11/include -L/opt/X11/lib -I/opt/local/include -L/opt/local/lib -I./include
+CC = gcc -I/opt/X11/include -L/opt/X11/lib -I/opt/local/include -L/opt/local/lib -I./include -I/usr/local/Cellar/libtiff/4.0.3/include -L/usr/local/Cellar/libtiff/4.0.3/lib
 
 # use this setting on the engin elf machines
 #CC = gcc296
@@ -27,13 +27,13 @@ LIBDIR =.
 BINDIR =../bin
 
 # put all of the relevant include files here
-_DEPS = graphics.h
+_DEPS = graphics.h tiff-util.h
 
 # convert them to point to the right place
 DEPS = $(patsubst %,$(INCDIR)/%,$(_DEPS))
 
 # put a list of all the object files (with .o endings)
-_COMMON = Emitter.o Particle.o Obstacle.o Wind.o
+_COMMON = Emitter.o Particle.o Obstacle.o Wind.o tiff-util.o
 
 # convert them to point to the right place
 COMMON = $(patsubst %,$(ODIR)/%,$(_COMMON))

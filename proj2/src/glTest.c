@@ -51,7 +51,7 @@ void display(void) {
   //glutSolidSphere(1.0, 32, 32);
   
   //printf("Before emit stuff\n");
-  emitter_update(e, oList, w, 2);
+  emitter_update(e, NULL, w, 0);
   emitter_draw(e);
   obstacle_draw(oList, 2);
   // draw everything
