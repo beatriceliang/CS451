@@ -141,6 +141,9 @@ Image *image_read(char *filename) {
       src -> data[i][j].rgb[2] = image[i*cols+j].b;
     }
   }
+    printf("R: %f, G: %f, B: %f\n", src -> data[5][5].rgb[0],
+           src -> data[5][5].rgb[1],
+           src -> data[5][5].rgb[2]);
   free(image);
   return (src);
 }
@@ -162,9 +165,9 @@ int image_write(Image *src, char *filename){
   }
   for (i = 0; i<rows; i++){
     for(j = 0; j<cols; j++){
-      image[i*cols+j].r = src -> data[i][j].rgb[0] * 255;
-      image[i*cols+j].g = src -> data[i][j].rgb[1] * 255;
-      image[i*cols+j].b = src -> data[i][j].rgb[2] * 255;
+      image[i*cols+j].r = src -> data[i][j].rgb[0];
+      image[i*cols+j].g = src -> data[i][j].rgb[1];
+      image[i*cols+j].b = src -> data[i][j].rgb[2];
     }
   }
   writePPM (image, rows, cols, colors, filename);

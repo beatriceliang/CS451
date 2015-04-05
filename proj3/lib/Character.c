@@ -8,18 +8,18 @@
 
 /* create a character */
 Character *create_char( char *filename ){
-  printf("Entering create_char\n");
+  //  printf("Entering create_char\n");
   Character *c = malloc(sizeof(Character));
   if(!c) 
     return NULL;
   c->image = image_read(filename);
-  printf("Exiting create_char\n");  
+  //printf("Exiting create_char\n");  
   return c;
 }
 
 /* create empty character set */
 CharSet *set_create(int type){
-  printf("Entering set_create\n");
+  //printf("Entering set_create\n");
   CharSet *c = malloc(sizeof(CharSet));
   if(!c)
     return NULL;
@@ -32,7 +32,7 @@ CharSet *set_create(int type){
     }
     c->type = 0;
     c->size = 10;
-    printf("Exiting set_create\n");
+    //printf("Exiting set_create\n");
     return c;
   }
   c->chars = malloc(sizeof(Character*)*95);
@@ -42,27 +42,27 @@ CharSet *set_create(int type){
     }
     c->type = 1;
     c->size = 95;
-    printf("Exiting set_create\n");
+    //printf("Exiting set_create\n");
     return c;
 }
 
 /* free character set */
 void set_free( CharSet *c ){
-  printf("Entering set_free\n");
+  //printf("Entering set_free\n");
   int i;
   for(i=0; i<c->size; i++){
-    printf("characters freed %d\n", i);
+    //printf("characters freed %d\n", i);
     image_dealloc( c->chars[i]->image );
     free(c->chars[i]);
   }
   free(c->chars);
   free(c);
-  printf("Exiting set_free\n");
+  //printf("Exiting set_free\n");
 }
 
 /* read characters into character sets */
 void char_read(CharSet *c){
-  printf("Entering char_read\n");
+  //printf("Entering char_read\n");
   int i;
   char filename[18];
   //10 char set
@@ -84,13 +84,13 @@ void char_read(CharSet *c){
       c->chars[i-32] = create_char(filename);
     }
   }
-  printf("Exiting char_read\n");
+  //printf("Exiting char_read\n");
 }
 
 /* calculate intensity of each character*/
 void set_intensity(CharSet *c){
 
-  printf("Entering set_intensity\n");
+  //printf("Entering set_intensity\n");
   int i,j,k;
   float rgb;
  
@@ -107,5 +107,5 @@ void set_intensity(CharSet *c){
     c->chars[i]->intensity = rgb/
       (3 * 14 * 12);
   }
-  printf("Exiting set_intensity\n");
+  //printf("Exiting set_intensity\n");
 }
