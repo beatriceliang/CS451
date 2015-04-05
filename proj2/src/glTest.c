@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <sys/time.h>
 #include <GL/gl.h>
 #include <GL/glut.h>
 #include "graphics.h"
@@ -11,6 +12,7 @@ Wind *w;
 
 // Function for drawing the contents of the screen
 void display(void) {
+
   //printf("Entering display\n");
   GLfloat position[] = {10.0, 5.0, 20.0, 1.0};
   int i;
