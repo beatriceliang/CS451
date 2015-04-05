@@ -20,6 +20,7 @@ typedef struct {
 typedef struct {
     Image *image;
     float intensity;
+    char ascii;//error checking purposes
 } Character;
 
 typedef struct{
@@ -64,9 +65,12 @@ Color image_getColor( Image *src, int r, int c );
 
 /* Characters */
 Character *create_char( char *filename );
+void char_swap(Character *a, Character *b);
 CharSet *set_create( int type );
 void set_free( CharSet *c );
 void char_read( CharSet *c );
 void set_intensity(CharSet *c);
+void quickSort( CharSet *c, int start, int end );
+
 
 #endif

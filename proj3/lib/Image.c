@@ -141,9 +141,11 @@ Image *image_read(char *filename) {
       src -> data[i][j].rgb[2] = image[i*cols+j].b;
     }
   }
-    printf("R: %f, G: %f, B: %f\n", src -> data[5][5].rgb[0],
+  /*
+  printf("R: %f, G: %f, B: %f\n", src -> data[5][5].rgb[0],
            src -> data[5][5].rgb[1],
            src -> data[5][5].rgb[2]);
+  */
   free(image);
   return (src);
 }

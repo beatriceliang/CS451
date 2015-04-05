@@ -17,6 +17,23 @@ Character *create_char( char *filename ){
   return c;
 }
 
+/* swap characters (used in sorting) */
+void char_swap(Character *a, Character *b){
+  Image *image;
+  float tempInt;
+  int tempAscii;
+
+  image = b->image;
+  tempInt = b->intensity;
+  tempAscii = b->ascii;
+  b->image = a->image;
+  b->intensity = a->intensity;
+  b->ascii = a->ascii;
+  a->image = image;
+  a->intensity = tempInt;
+  a->ascii = tempAscii;
+}
+
 /* create empty character set */
 CharSet *set_create(int type){
   //printf("Entering set_create\n");
@@ -68,20 +85,31 @@ void char_read(CharSet *c){
   //10 char set
   if(c->type == 0){
     c->chars[0] = create_char("character/32.ppm");
+    c->chars[0]->ascii = 32;
     c->chars[1] = create_char("character/46.ppm");
+    c->chars[1]->ascii = 46;
     c->chars[2] = create_char("character/58.ppm");
+    c->chars[2]->ascii = 58;
     c->chars[3] = create_char("character/45.ppm");
+    c->chars[3]->ascii = 45;
     c->chars[4] = create_char("character/61.ppm");
+    c->chars[4]->ascii = 61;
     c->chars[5] = create_char("character/43.ppm");
+    c->chars[5]->ascii = 43;
     c->chars[6] = create_char("character/42.ppm");
+    c->chars[6]->ascii = 42;
     c->chars[7] = create_char("character/35.ppm");
+    c->chars[7]->ascii = 35;
     c->chars[8] = create_char("character/37.ppm");
+    c->chars[8]->ascii = 37;
     c->chars[9] = create_char("character/64.ppm");
+    c->chars[9]->ascii = 64;
   }
   else{
     for( i = 32; i < 127; i++ ){
       sprintf(filename, "character/%d.ppm", i);
       c->chars[i-32] = create_char(filename);
+      c->chars[i-32]->ascii = i;
     }
   }
   //printf("Exiting char_read\n");
@@ -108,4 +136,32 @@ void set_intensity(CharSet *c){
       (3 * 14 * 12);
   }
   //printf("Exiting set_intensity\n");
+}
+
+/* sort the character set based on intensity */
+void quickSort( CharSet *c, int start, int end ){
+
+  float pivot;
+  int i,j;
+
+  pivot = c->chars[(start+end)/2]->intensity;
+  i = start;
+  j = end;
+  
+  do{
+    while(c->chars[i]->intensity < pivot)
+      i++;
+    while(pivot < c->chars[j]->intensity)
+      j--;
+    if(i <= j){
+      char_swap( c->chars[i], c->chars[j] );
+      i++;
+      j--;
+    }
+  } while( i <= j);
+
+  if(start < j)
+    quickSort( c, start, j );
+  if(i < end)
+    quickSort( c , i, end );
 }
