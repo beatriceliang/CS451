@@ -15,6 +15,7 @@ int main(int argc, char *argv[]){
   char_read(c);
   set_intensity(c);
   
+  /*
   char_swap(c->chars[1],c->chars[2]);
   char_swap(c->chars[7],c->chars[6]);
   char_swap(c->chars[4],c->chars[9]);
@@ -29,8 +30,22 @@ int main(int argc, char *argv[]){
     printf("Index: %d, Intensity: %f, Character %c\n", 
 	   i, c->chars[i]->intensity, c->chars[i]->ascii);
   }
-  //image_write(c->chars[1]->image, "1.ppm");
-  //image_write(c->chars[2]->image, "2.ppm");
+  image_write(c->chars[1]->image, "1.ppm");
+  image_write(c->chars[2]->image, "2.ppm");
+  */
+  quickSort( c, 0, c->size-1 );
+  printf("*********Before Optimization********* \n");
+  for( i=0; i<c->size; i++ ){
+    printf("Index: %d, Intensity: %f, Character %c\n", 
+	   i, c->chars[i]->intensity, c->chars[i]->ascii);
+  }
+  set_optimize(c);
+  printf("*********After Optimization********* \n");
+  for( i=0; i<c->size; i++ ){
+    printf("Index: %d, Intensity: %f, Character %c\n", 
+	   i, c->chars[i]->intensity, c->chars[i]->ascii);
+  }
+
   set_free(c);
 }
     

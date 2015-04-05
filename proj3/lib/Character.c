@@ -165,3 +165,21 @@ void quickSort( CharSet *c, int start, int end ){
   if(i < end)
     quickSort( c , i, end );
 }
+
+/* change range of intensity to [0, 255] */
+void set_optimize( CharSet *c ){
+  
+  int i;
+  float min, max, range; //min and max intensity before scaling
+
+  //sort character set from low intensity to high intensity
+  quickSort( c, 0, c->size-1 );
+  min = c->chars[0]->intensity;
+  max = c->chars[c->size-1]->intensity;
+  range = max -min;
+
+  //scale intensity
+  for( i=0; i<c->size; i++ ){
+    c->chars[i]->intensity = 255.0*(c->chars[i]->intensity - min) / range;
+  }
+}

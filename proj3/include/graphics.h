@@ -71,6 +71,6 @@ void set_free( CharSet *c );
 void char_read( CharSet *c );
 void set_intensity(CharSet *c);
 void quickSort( CharSet *c, int start, int end );
-
+void set_optimize( CharSet *c );
 
 #endif
