@@ -63,7 +63,9 @@ Color image_getColor( Image *src, int r, int c );
 
 /* Characters */
 Character *create_char( char *filename );
-void char_read(CharSet *c);
 CharSet *create_set( int type );
+void set_free( CharSet *c );
+void char_read( CharSet *c );
+void set_intensity(CharSet *c);
 
 #endif
