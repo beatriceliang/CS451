@@ -32,10 +32,10 @@ _DEPS = graphics.h
 DEPS = $(patsubst %,$(INCDIR)/%,$(_DEPS))
 
 # put a list of the executables here
-EXECUTABLES = firework chair
+EXECUTABLES = con
 
 # put a list of all the object files here for all executables (with .o endings)
-_OBJ = firework.o chair.o 
+_OBJ = con.o 
 
 # convert them to point to the right place
 OBJ = $(patsubst %,$(ODIR)/%,$(_OBJ))
@@ -57,10 +57,7 @@ all:
 
 
 # put the specific executable rules here
-firework: $(ODIR)/firework.o
-	$(CC) -o $(BINDIR)/$@ $^ $(LFLAGS) $(LIBS)
-
-chair: $(ODIR)/chair.o
+con: $(ODIR)/con.o
 	$(CC) -o $(BINDIR)/$@ $^ $(LFLAGS) $(LIBS)
 
 .PHONY: clean
