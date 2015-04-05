@@ -23,8 +23,9 @@ typedef struct {
 } Character;
 
 typedef struct{
-    Character *chars;
+    Character **chars;
     int type; //0 for default 10, 1 for all
+    int size; //size of character set
 } CharSet;
 
 Pixel *readPPM(int *rows, int *cols, int * colors, char *filename);
@@ -63,7 +64,7 @@ Color image_getColor( Image *src, int r, int c );
 
 /* Characters */
 Character *create_char( char *filename );
-CharSet *create_set( int type );
+CharSet *set_create( int type );
 void set_free( CharSet *c );
 void char_read( CharSet *c );
 void set_intensity(CharSet *c);
