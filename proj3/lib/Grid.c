@@ -180,9 +180,10 @@ void grid_free(Grid *g){
   }
 }
 
-/* reads appropriate values (intensity & rgb) into grid */
+/* reads and calculate values (intensity & rgb) and store into grid */
 void read_to_grid( Grid *g ){
   int r, c;
+  
   for(r = 0; r < (g->rows * 14); r++){
     for(c = 0; c < (g->cols * 12); c++){
       g->r[r/14][c/12] = g->r[r/14][c/12] + g->original->data[r][c].rgb[0];
@@ -190,4 +191,18 @@ void read_to_grid( Grid *g ){
       g->b[r/14][c/12] = g->b[r/14][c/12] + g->original->data[r][c].rgb[2];
     }
   }
+
+  for(r = 0; r < g->rows; r++){
+    for(c = 0; c < g->cols; c++){
+      //12 * 14 = 168
+      g->r[r][c] = g->r[r][c]/168.0;
+      g->g[r][c] = g->g[r][c]/168.0;
+      g->b[r][c] = g->b[r][c]/168.0;
+      g->intensity[r][c] = (g->r[r][c] + g->g[r][c] + g->b[r][c])/3.0;
+    }
+  }
+}
+
+/* write appropriate character into grid based on intensity */
+void char_to_grid( Grid *g, CharSet *c ){
 }

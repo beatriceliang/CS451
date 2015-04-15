@@ -83,10 +83,11 @@ void char_read( CharSet *c );
 void set_intensity(CharSet *c);
 void quickSort( CharSet *c, int start, int end );
 void set_optimize( CharSet *c );
+Image *binary_search( CharSet *c, int start, int stop, float intensity );
 
 /* Grid */
 Grid *create_grid( char *filename );
 void grid_free( Grid *g );
 void read_to_grid( Grid *g );
-
+void char_to_grid( Grid *g, CharSet *c );
 #endif
