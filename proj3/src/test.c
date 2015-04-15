@@ -42,8 +42,9 @@ int main(int argc, char *argv[]){
   set_optimize(c);
   printf("*********After Optimization********* \n");
   for( i=0; i<c->size; i++ ){
-    printf("Index: %d, Intensity: %f, Character %c\n", 
-	   i, c->chars[i]->intensity, c->chars[i]->ascii);
+    printf("Index: %d, Intensity: %f, Character %c, Row: %d, Col: %d\n", 
+	   i, c->chars[i]->intensity, c->chars[i]->ascii,
+	   c->chars[i]->image->rows, c->chars[i]->image->cols);
   }
 
   set_free(c);
