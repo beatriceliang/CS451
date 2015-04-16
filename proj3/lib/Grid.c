@@ -199,10 +199,27 @@ void read_to_grid( Grid *g ){
       g->g[r][c] = g->g[r][c]/168.0;
       g->b[r][c] = g->b[r][c]/168.0;
       g->intensity[r][c] = (g->r[r][c] + g->g[r][c] + g->b[r][c])/3.0;
+      //printf("%d ,", (int)(g->intensity[r][c]));
     }
+    //printf("\n");
   }
 }
 
 /* write appropriate character into grid based on intensity */
 void char_to_grid( Grid *g, CharSet *c ){
+
+  Image *temp;
+  int row, col, size;
+
+
+  //size of character list
+  size = c->size;
+
+  for(row = 0; row < g->rows; row++){
+    for(col = 0; col < g->cols; col++){
+      temp = binary_search(c, 0, size, g->intensity[row][col]);
+      g->grid[row][col] = *temp;
+    }
+  }    
+
 }
