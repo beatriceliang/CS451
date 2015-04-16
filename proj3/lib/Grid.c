@@ -249,9 +249,9 @@ void grid_to_pic( Grid *g ){
     printf("Outer %d, %d\n", r, (g->rows * 14));
     for(c = 0; c < (g->cols * 12); c++){
       printf("Inner %d, %d\n", c, (g->cols * 12));
-      g->after->data[r][c].rgb[0] = g->r[r/14][c/12];
-      g->after->data[r][c].rgb[1] = g->g[r/14][c/12];
-      g->after->data[r][c].rgb[2] = g->b[r/14][c/12];
+      g->after->data[r][c].rgb[0] =g->grid[r/14][c/12].data[r%14][c%12].rgb[0];
+      g->after->data[r][c].rgb[1] =g->grid[r/14][c/12].data[r%14][c%12].rgb[1];
+      g->after->data[r][c].rgb[2] =g->grid[r/14][c/12].data[r%14][c%12].rgb[2];
     }
   }
 }

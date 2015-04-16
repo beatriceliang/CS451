@@ -13,7 +13,7 @@ int main(int argc, char *argv[]){
   Grid *g;
   Image *temp;
 
-  c = set_create(0);
+  c = set_create(1);
   char_read(c);
   set_intensity(c);
   quickSort( c, 0, c->size-1 );
