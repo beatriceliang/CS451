@@ -188,6 +188,7 @@ void set_optimize( CharSet *c ){
 Image *binary_search( CharSet *c, int start, int stop, float intensity ){
   
   int half_dist;
+  //printf( "start: %d, stop: %d \n", start, stop);
   
   if(start == stop)
     return c->chars[start]->image;

@@ -15,6 +15,7 @@ Grid *create_grid( char *filename ){
     return NULL;
   //reads the image into the grid
   g->original = image_read(filename);
+  g->after = NULL;
 
   r = g->original->rows/14;
   c = g->original->cols/12;
@@ -22,6 +23,7 @@ Grid *create_grid( char *filename ){
   //create the grid so that it's divided into 14x12 rectangles
   g->grid = malloc(sizeof(Image)*r);
   if(!g->grid){
+    printf("Inside \n");
     image_dealloc(g->original);
     free(g);
     return NULL;
@@ -30,6 +32,7 @@ Grid *create_grid( char *filename ){
   //allocate memory for rgb and intensity
   g->intensity = malloc(sizeof(float)*r);
   if(!g->intensity){
+    printf("Inside \n");
     image_dealloc(g->original);
     free(g->grid);
     free(g);
@@ -37,6 +40,7 @@ Grid *create_grid( char *filename ){
   }
   g->r = malloc(sizeof(float)*r);
   if(!g->r){
+    printf("Inside \n");
     image_dealloc(g->original);
     free(g->intensity);
     free(g->grid);
@@ -45,6 +49,7 @@ Grid *create_grid( char *filename ){
   }
   g->g = malloc(sizeof(float)*r);
   if(!g->g){
+    printf("Inside \n");
     image_dealloc(g->original);
     free(g->intensity);
     free(g->r);
@@ -54,6 +59,7 @@ Grid *create_grid( char *filename ){
   }
   g->b = malloc(sizeof(float)*r);
   if(!g->g){
+    printf("Inside \n");
     image_dealloc(g->original);
     free(g->intensity);
     free(g->r);
@@ -63,8 +69,15 @@ Grid *create_grid( char *filename ){
     return NULL;
   }
 
+  g->grid[0] = NULL;
+  g->intensity[0] = NULL; 
+  g->r[0] = NULL;
+  g->g[0] = NULL;
+  g->b[0] = NULL;
+
   g->grid[0] = malloc(sizeof(Image)*r*c);
   if(!g->grid[0]){
+    printf("Inside \n");
     image_dealloc(g->original);
     free(g->intensity);
     free(g->r);
@@ -76,6 +89,7 @@ Grid *create_grid( char *filename ){
   }
   g->intensity[0] = malloc(sizeof(float)*r*c);
   if(!g->intensity[0]){
+    printf("Inside \n");
     image_dealloc(g->original);
     free(g->intensity);
     free(g->r);
@@ -88,6 +102,7 @@ Grid *create_grid( char *filename ){
   }
   g->r[0] = malloc(sizeof(float)*r*c);
   if(!g->r[0]){
+    printf("Inside r\n");
     image_dealloc(g->original);
     free(g->intensity[0]);
     free(g->intensity);
@@ -101,6 +116,7 @@ Grid *create_grid( char *filename ){
   }
   g->g[0] = malloc(sizeof(float)*r*c);
   if(!g->g[0]){
+    printf("Inside g\n");
     image_dealloc(g->original);
     free(g->intensity[0]);
     free(g->intensity);
@@ -115,6 +131,7 @@ Grid *create_grid( char *filename ){
   }
   g->b[0] = malloc(sizeof(float)*r*c);
   if(!g->b[0]){
+    printf("Inside b\n");
     image_dealloc(g->original);
     free(g->intensity[0]);
     free(g->intensity);
@@ -158,22 +175,16 @@ void grid_free(Grid *g){
       free(g->intensity);
     }
     if(g->r){
-      if(g->r[0]){
-	free(g->r[0]);
-      }
       free(g->r);
     }
     if(g->g){
-      if(g->g[0]){
-	free(g->g[0]);
-      }
       free(g->g);
     }
     if(g->b){
-      if(g->b[0]){
-	free(g->b[0]);
-      }
       free(g->b);
+    }
+    if(g->after){
+      image_free(g->after);
     }
     image_dealloc(g->original);
     free(g);
@@ -199,8 +210,10 @@ void read_to_grid( Grid *g ){
       g->g[r][c] = g->g[r][c]/168.0;
       g->b[r][c] = g->b[r][c]/168.0;
       g->intensity[r][c] = (g->r[r][c] + g->g[r][c] + g->b[r][c])/3.0;
+      //printf("%d %d %d\n", (int)(g->r[r][c]), (int)(g->g[r][c]), (int)(g->b[r][c]));
       //printf("%d ,", (int)(g->intensity[r][c]));
     }
+    
     //printf("\n");
   }
 }
@@ -213,7 +226,7 @@ void char_to_grid( Grid *g, CharSet *c ){
 
 
   //size of character list
-  size = c->size;
+  size = c->size-1;
 
   for(row = 0; row < g->rows; row++){
     for(col = 0; col < g->cols; col++){
@@ -221,5 +234,24 @@ void char_to_grid( Grid *g, CharSet *c ){
       g->grid[row][col] = *temp;
     }
   }    
+}
 
+/* Converts the grid into a full-sized image */
+void grid_to_pic( Grid *g ){
+
+  int r,c;
+  printf("Checkpoint 0\n");
+  g->after = image_create(g->rows*14, g->cols*12);
+  //image_alloc(g->after, g->rows*14, g->cols*12);
+
+  printf("Checkpoint 2\n");
+  for(r = 0; r < (g->rows * 14); r++){
+    printf("Outer %d, %d\n", r, (g->rows * 14));
+    for(c = 0; c < (g->cols * 12); c++){
+      printf("Inner %d, %d\n", c, (g->cols * 12));
+      g->after->data[r][c].rgb[0] = g->r[r/14][c/12];
+      g->after->data[r][c].rgb[1] = g->g[r/14][c/12];
+      g->after->data[r][c].rgb[2] = g->b[r/14][c/12];
+    }
+  }
 }

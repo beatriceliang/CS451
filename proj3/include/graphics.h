@@ -31,6 +31,7 @@ typedef struct{
 
 typedef struct{
   Image *original;
+  Image *after;
   Image **grid;
   float **intensity;
   float **r;
@@ -90,4 +91,5 @@ Grid *create_grid( char *filename );
 void grid_free( Grid *g );
 void read_to_grid( Grid *g );
 void char_to_grid( Grid *g, CharSet *c );
+void grid_to_pic( Grid *g );
 #endif
