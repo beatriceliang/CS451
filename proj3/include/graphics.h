@@ -90,4 +90,5 @@ Image *create_bw(Grid *g);
 Image *pixelate(Grid *g);
 void char_to_grid( Grid *g, CharSet *c );
 void grid_to_pic( Grid *g );
+void grid_color( Grid *g );
 #endif

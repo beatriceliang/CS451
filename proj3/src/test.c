@@ -33,6 +33,7 @@ printf("Checkpoint 1\n");
   //temp = binary_search( c, 0, c->size-1, g->intensity[10][10]);//c->chars[5]->image;
   printf("Checkpoint 3.5\n");
   grid_to_pic(g);
+  grid_color(g);
     //image_write( create_bw(g), argv[2] );
   image_write( g->after, argv[2] );
   printf("Checkpoint 4\n");

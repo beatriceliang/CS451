@@ -118,13 +118,8 @@ void char_to_grid( Grid *g, CharSet *c ){
 void grid_to_pic( Grid *g ){
 
   int r,c;
-  printf("Checkpoint 0\n");
-
-  printf("Checkpoint 2\n");
   for(r = 0; r < (g->rows * 14); r++){
-    //printf("Outer %d, %d\n", r, (g->rows * 14));
     for(c = 0; c < (g->cols * 12); c++){
-      //printf("Inner %d, %d\n", r, c);
       g->after->data[r][c].rgb[0] = g->grid[r/14][c/12].data[r%14][c%12].rgb[0];
       g->after->data[r][c].rgb[1] = g->grid[r/14][c/12].data[r%14][c%12].rgb[1];
       g->after->data[r][c].rgb[2] = g->grid[r/14][c/12].data[r%14][c%12].rgb[2];
@@ -132,7 +127,21 @@ void grid_to_pic( Grid *g ){
   }
 }
 
-
+/* Add Color to the grid */
+void grid_color( Grid *g ){
+  int r, c, i;
+  float alpha;
+  for(r = 0; r < (g->rows * 14); r++){
+    for(c = 0; c < (g->cols * 12); c++){
+      alpha = (255.0 - g->after->data[r][c].rgb[0])/255.0;
+      for(i = 0; i <3 ; i++){
+	image_setc(g->after, r, c, i, 
+		   (alpha*g->original->data[r][c].rgb[i] +
+		    (1-alpha)*g->after->data[r][c].rgb[i]));
+      }
+    }
+  }
+}
 /* frees everything in the grid, including itself */
 void grid_free(Grid *g){
   if(g){
@@ -153,3 +162,4 @@ void grid_free(Grid *g){
     free(g);
   }
 }
+
