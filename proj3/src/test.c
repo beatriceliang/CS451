@@ -13,7 +13,8 @@ int main(int argc, char *argv[]){
   Grid *g;
   Image *temp;
 
-  c = set_create(1);
+
+  c = set_create(0);
   char_read(c);
   set_intensity(c);
   quickSort( c, 0, c->size-1 );
@@ -23,17 +24,22 @@ int main(int argc, char *argv[]){
     printf("Usage: ../bin/test <input file> <output file>\n");
     exit(-1);
   }
-
+printf("Checkpoint 1\n");
   g = create_grid( argv[1] );
-  read_to_grid(g);
+    printf("Checkpoint 2.0\n");
+  //read_to_grid(g);
+    printf("Checkpoint 3\n");
   char_to_grid( g, c );
   //temp = binary_search( c, 0, c->size-1, g->intensity[10][10]);//c->chars[5]->image;
   printf("Checkpoint 3.5\n");
   grid_to_pic(g);
+    //image_write( create_bw(g), argv[2] );
   image_write( g->after, argv[2] );
   printf("Checkpoint 4\n");
-  grid_free(g);
-  set_free(c);
+    grid_free(g);
+    set_free(c);
+  
+ 
   /*
   char_swap(c->chars[1],c->chars[2]);
   char_swap(c->chars[7],c->chars[6]);

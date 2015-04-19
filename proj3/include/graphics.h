@@ -33,10 +33,6 @@ typedef struct{
   Image *original;
   Image *after;
   Image **grid;
-  float **intensity;
-  float **r;
-  float **g;
-  float **b;
   int rows;
   int cols;
 } Grid;
@@ -89,7 +85,7 @@ Image *binary_search( CharSet *c, int start, int stop, float intensity );
 /* Grid */
 Grid *create_grid( char *filename );
 void grid_free( Grid *g );
-void read_to_grid( Grid *g );
+//void read_to_grid( Grid *g );
 Image *create_bw(Grid *g);
 Image *pixelate(Grid *g);
 void char_to_grid( Grid *g, CharSet *c );
