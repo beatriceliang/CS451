@@ -193,29 +193,43 @@ void grid_free(Grid *g){
 
 /* reads and calculate values (intensity & rgb) and store into grid */
 void read_to_grid( Grid *g ){
-  int r, c;
-  
-  for(r = 0; r < (g->rows * 14); r++){
-    for(c = 0; c < (g->cols * 12); c++){
-      g->r[r/14][c/12] = g->r[r/14][c/12] + g->original->data[r][c].rgb[0];
-      g->g[r/14][c/12] = g->g[r/14][c/12] + g->original->data[r][c].rgb[1];
-      g->b[r/14][c/12] = g->b[r/14][c/12] + g->original->data[r][c].rgb[2];
+  int row, col;
+  for (row = 0; row < g->rows-1; row++){
+    for(col = 0; col < g->cols-1; col++){
+        g->r[row][col] = g->original->data[(row+1)*14][(col+1)*12].rgb[0];
+        g->g[row][col] = g->original->data[(row+1)*14][(col+1)*12].rgb[1];
+        g->b[row][col] = g->original->data[(row+1)*14][(col+1)*12].rgb[2];
+        g->intensity[row][col] = g->r[row][col]+g->g[row][col]+g->b[row][col];
+      
     }
   }
+}
 
-  for(r = 0; r < g->rows; r++){
-    for(c = 0; c < g->cols; c++){
-      //12 * 14 = 168
-      g->r[r][c] = g->r[r][c]/168.0;
-      g->g[r][c] = g->g[r][c]/168.0;
-      g->b[r][c] = g->b[r][c]/168.0;
-      g->intensity[r][c] = (g->r[r][c] + g->g[r][c] + g->b[r][c])/3.0;
-      //printf("%d %d %d\n", (int)(g->r[r][c]), (int)(g->g[r][c]), (int)(g->b[r][c]));
-      //printf("%d ,", (int)(g->intensity[r][c]));
+Image *create_bw(Grid *g){
+    Image *temp;
+    int row, col, i;
+    temp = image_create(g-> original->rows, g->original->cols);
+    for (row = 0; row < g-> original->rows; row++){
+      for(col = 0; col< g-> original->cols; col++){
+          for(i = 0; i <3 ; i++){
+            image_setc(temp, row, col, i, g->original->data[row][col].rgb[0]+g->original->data[row][col].rgb[1]+g->original->data[row][col].rgb[2]);
+          }
+      }
     }
-    
-    //printf("\n");
+    return temp;
+}
+Image *pixelate(Grid *g){
+  Image *temp;
+  int row, col, i;
+  temp = image_create(g->rows, g->cols);
+  for (row = 0; row < g->rows-1; row++){
+    for(col = 0; col < g->cols-1; col++){
+      for(i = 0; i <3 ; i++){
+          image_setc(temp,row,col,i,g->original->data[(row+1)*14][(col+1)*12].rgb[i]);
+      }
+    }
   }
+  return temp;
 }
 
 /* write appropriate character into grid based on intensity */
