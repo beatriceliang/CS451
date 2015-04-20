@@ -35,7 +35,7 @@ DEPS = $(patsubst %,$(INCDIR)/%,$(_DEPS))
 EXECUTABLES = con test
 
 # put a list of all the object files here for all executables (with .o endings)
-_OBJ = con.o test.o
+_OBJ = ascii.o
 
 # convert them to point to the right place
 OBJ = $(patsubst %,$(ODIR)/%,$(_OBJ))
@@ -57,7 +57,7 @@ all:
 
 
 # put the specific executable rules here
-test: $(ODIR)/test.o
+ascii: $(ODIR)/ascii.o
 	$(CC) -o $(BINDIR)/$@ $^ $(LFLAGS) $(LIBS)
 
 .PHONY: clean

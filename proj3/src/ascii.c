@@ -15,7 +15,7 @@ int main(int argc, char *argv[]){
   Grid *g;
 
   if(argc < 4) {
-    printf("Usage: ../bin/test <0 or 1> <input file> <output file>\n");
+    printf("Usage: ../bin/ascii <0 or 1> <input file> <output file>\n");
     exit(-1);
   }
 
