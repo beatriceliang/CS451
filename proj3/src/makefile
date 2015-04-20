@@ -57,9 +57,6 @@ all:
 
 
 # put the specific executable rules here
-con: $(ODIR)/con.o
-	$(CC) -o $(BINDIR)/$@ $^ $(LFLAGS) $(LIBS)
-
 test: $(ODIR)/test.o
 	$(CC) -o $(BINDIR)/$@ $^ $(LFLAGS) $(LIBS)
 

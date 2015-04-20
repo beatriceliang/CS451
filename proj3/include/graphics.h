@@ -1,3 +1,6 @@
+/* Beatrice Liang and Jenny Lin */
+/* Spring 2015 */
+
 #ifndef GRAPHICS_H
 #define GRAPHICS_H
 
