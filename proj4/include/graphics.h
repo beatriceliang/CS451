@@ -34,6 +34,15 @@ typedef struct{
   Node *tail;
 } LinkedList;
 
+typedef struct{
+  int door; //whether or not door location has been set
+  LinkedList *active; //active shapes to be partitioned
+  LinkedList *design; //terminal building design
+  int rows;
+  int cols;
+} Building;
+
+
 void attribute_init( Attribute *a );
 void attribute_copy( Attribute *to, Attribute *from );
 void attribute_delete( Attribute *a );
@@ -52,5 +61,7 @@ Shape *ll_next( LinkedList *ll );
 Shape *ll_pop( LinkedList *ll );
 int ll_empty( LinkedList *ll );
 void ll_print( LinkedList *ll );
+
+Building *building_new( void );
 
 #endif
