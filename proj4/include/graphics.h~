@@ -1,0 +1,17 @@
+/* Beatrice Liang and Jenny Lin */
+/* Spring 2015 */
+
+#ifndef GRAPHICS_H
+#define GRAPHICS_H
+
+// Node data structure
+typedef struct {
+void *data;
+void *next;
+} Node;
+
+// List data structure
+typedef struct {
+  Node *root;
+  Node *current;
+} LinkedList;

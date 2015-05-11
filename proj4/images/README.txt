@@ -1,5 +1,5 @@
 Guide for main method
-Step 1: Build rules library with attributes
+Step 1: Buil rules library with attributes
 Step 2: User Input (Skip for now)
 Step 3: Split building into smaller volumes - roof and rest of building
      - if it's an outside block, add shpw to the active shape list
