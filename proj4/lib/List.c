@@ -9,8 +9,6 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
-#include <math.h>
 #include "graphics.h"
 
 #define USECPP 0
@@ -25,9 +23,9 @@ LinkedList *ll_new( void ) {
     return(NULL);
   }
   
-  ll->root = NULL;
-  ll->current = ll->root;
-  ll->tail = ll->root;
+  ll->head = NULL;
+  ll->current = ll->head;
+  ll->tail = ll->head;
   return(ll);
 }
 
@@ -36,11 +34,12 @@ void ll_add( LinkedList *ll, Shape *item ) {
   Node *n;
 
   // see if the list is empty
-  if( ll->root == NULL ) {
+  if( ll->head == NULL ) {
     n = malloc(sizeof(Node));
     n->next = NULL;
     n->data = item;
-    ll->root = n;
+    ll->head = n;
+    ll->tail = ll->head;
     return;
   }
   
@@ -57,23 +56,23 @@ void ll_add( LinkedList *ll, Shape *item ) {
   Returns true if the list is empty
 */
 int ll_empty( LinkedList *ll ) {
-  if( ll->root == NULL )
+  if( ll->head == NULL )
     return(1);
   return(0);
 }
 
 /* Return a pointer to the top item in the list */
 Shape *ll_peek( LinkedList *ll ) {
-  if( ll->root == NULL )
+  if( ll->head == NULL )
     return(NULL);
   
-  return(ll->root->data);
+  return(ll->head->data);
 }
 
 /* Sets the current iterator to the head of the list and 
    returns the data from the first node */
 Shape *ll_head( LinkedList *ll ) {
-  ll->current = ll->root;
+  ll->current = ll->head;
   if( ll->current != NULL )
     return( ll->current->data );
   
@@ -97,11 +96,11 @@ Shape *ll_pop( LinkedList *ll ) {
   Node *n;
   Shape *node_data;
   
-  if( ll->root == NULL )
+  if( ll->head == NULL )
     return(NULL);
   
-  n = ll->root;
-  ll->root = ll->root->next;
+  n = ll->head;
+  ll->head = ll->head->next;
   
   node_data = n->data;
   free(n);
@@ -118,7 +117,7 @@ void ll_delete( LinkedList *ll ) {
   while( p != NULL ) {
     q = p->next;
     if( p->data != NULL )
-      shape_free( p->data );
+      shape_delete( p->data );
     free(p);
     p = q;
   }
@@ -126,3 +125,15 @@ void ll_delete( LinkedList *ll ) {
   return;
 }
 
+/* Print out list for testing purposes */
+void ll_print( LinkedList *ll ) {
+  Shape *s;
+
+  s = ll_head( ll );
+
+  while( s ){
+    shape_print(s);
+    s = ll_next( ll );
+  }
+
+}
