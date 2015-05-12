@@ -42,7 +42,7 @@ void building_init( Building *b, int w, int d, int h, int roof ){
 
   wdh[0] = w/((float)(b->cols));
   wdh[1] = d/((float)(b->rows));
-  wdh[2] = h/((float)(b->floors));
+  wdh[2] = (h-1)/((float)(b->floors));
 
   xyz[0] = 0.0;
   xyz[1] = 0.0;

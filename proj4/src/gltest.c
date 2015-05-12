@@ -64,14 +64,13 @@ void draw_building( void ){
     glEnd();
     s = ll_next( b->active );
   }
-
 }
 
 // Function for drawing the contents of the screen
 void display(void) {
     
     GLfloat position[] = {20.0, 30.0, 40.0, 1.0};
-    
+    Shape *s;
     // clear screen
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glColor4f(1.0, 1.0, 1.0, 1.0);
@@ -97,7 +96,14 @@ void display(void) {
     glLightfv(GL_LIGHT0, GL_POSITION, position);
  
     draw_building();
- 
+    s = ll_head( b->design );
+    glColor4f( 1.0f, 0.0f, 0.0f, 1.0f );
+    glPushMatrix();
+    glTranslatef( s->wdh[0]/2.0, 16.5, -s->wdh[1]/2.0);
+    glScalef(s->wdh[0], s->wdh[2], s->wdh[1]);
+    glutSolidCube(1);
+    glPopMatrix(); 
+
     // draw everything
     glFlush();
     usleep(10000);
@@ -156,12 +162,12 @@ void keyboard(unsigned char key, int x, int y){
     angle = angle+3.0;
     break;
   case 'w':
-    if(eyeAngle>-90.0)
-    eyeAngle = eyeAngle-3.0;
-    break;
-  case 's':
     if(eyeAngle<90.0)
     eyeAngle = eyeAngle+3.0;
+    break;
+  case 's':
+    if(eyeAngle>-90.0)
+    eyeAngle = eyeAngle-3.0;
     break;
   case 'i':
     posx = posx-1;
