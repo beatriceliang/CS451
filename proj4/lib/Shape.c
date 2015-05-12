@@ -40,7 +40,8 @@ Shape *shape_new( char *symbol, float *xyz, float *wdh, int *rc, int floor,
   s->rc[1] = rc[1];
   s->floor = floor;
   attribute_init( s->a );
-  attribute_copy( s->a, a );
+  if(a)
+    attribute_copy( s->a, a );
   s->dir[0] = dir[0];
   s->dir[1] = dir[1];
   s->dir[2] = dir[2];

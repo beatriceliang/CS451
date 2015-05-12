@@ -29,10 +29,10 @@ _DEPS = graphics.h
 DEPS = $(patsubst %,$(INCDIR)/%,$(_DEPS))
 
 # put a list of the executables here
-EXECUTABLES = test
+EXECUTABLES = test gltest
 
 # put a list of all the object files here for all executables (with .o endings)
-_OBJ = test.o
+_OBJ = test.o gltest.o
 
 # convert them to point to the right place
 OBJ = $(patsubst %,$(ODIR)/%,$(_OBJ))
@@ -54,6 +54,9 @@ all:
 
 # put the specific executable rules here
 test: $(ODIR)/test.o 
+	$(CC) -o $(BINDIR)/$@ $^ $(LFLAGS) $(LIBS) $(CFLAGS)
+
+gltest: $(ODIR)/gltest.o 
 	$(CC) -o $(BINDIR)/$@ $^ $(LFLAGS) $(LIBS) $(CFLAGS)
 
 .PHONY: clean

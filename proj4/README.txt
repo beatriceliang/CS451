@@ -30,7 +30,7 @@ Given a building, lower left front corner is 0,0
 Row counts along z axis (dec), column along x (inc), level along y (inc)
 Width is column diff (x), Depth is row diff (z), Height is level diff (y)
 Given, lower left corner of cube, these are 4 coords of shape (in order, LL, LR, UL, UR) when:
-       - r = 0 (front):	  (x,y,z), (x+w, y, z), (x, y+h, z), (x+w, y+h, z)
-       - r = max (back):  (x+w, y, z-d), (x,y,z-d), (x+c, y+h, z-d), (x, y+h, z-d) 
-       - c = 0 (left):	  (x, y, z-d), (x, y, z), (x, y+h, z-d), (x, y+h, z)
-       - c = max (right): (x+w, y, z), (x+w, y, z-d), (x+w, y+h, z), (x+w, y+h, z-d)
+       - r = 0 (front):	  (x,y,z), (x+w, y, z), (x+w, y+h, z), (x, y+h, z)
+       - r = max (back):  (x+w, y, z-d), (x,y,z-d), (x, y+h, z-d), (x+c, y+h, z-d)
+       - c = 0 (left):	  (x, y, z-d), (x, y, z), (x, y+h, z), (x, y+h, z-d)
+       - c = max (right): (x+w, y, z), (x+w, y, z-d), (x+w, y+h, z-d), (x+w, y+h, z)

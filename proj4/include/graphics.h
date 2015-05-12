@@ -40,6 +40,7 @@ typedef struct{
   LinkedList *design; //terminal building design
   int rows;
   int cols;
+  int floors;
 } Building;
 
 
@@ -63,5 +64,8 @@ int ll_empty( LinkedList *ll );
 void ll_print( LinkedList *ll );
 
 Building *building_new( void );
-
+void building_init( Building *b, int w, int d, int h, int roof ); 
+void building_setup( Building *b, int w, int d, int h, int roof, 
+		     int width, int depth, int height, Attribute *a ); 
+void building_delete( Building *b );
 #endif
