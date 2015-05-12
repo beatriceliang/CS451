@@ -2,7 +2,7 @@ Guide for main method
 Step 1: Build rules library with attributes
 Step 2: User Input (Skip for now)
 Step 3: Split building into smaller volumes - roof and rest of building
-     - if it's an outside block, add shpw to the active shape list
+     - if it's an outside block, add shape to the active shape list
      Shape should have: 
      	   - float xyz[3]; //coord of its lower left corner
 	   - float wdh[3]; // width, depth, height of block
@@ -34,3 +34,18 @@ Given, lower left corner of cube, these are 4 coords of shape (in order, LL, LR,
        - r = max (back):  (x+w, y, z-d), (x,y,z-d), (x, y+h, z-d), (x+c, y+h, z-d)
        - c = 0 (left):	  (x, y, z-d), (x, y, z), (x, y+h, z), (x, y+h, z-d)
        - c = max (right): (x+w, y, z), (x+w, y, z-d), (x+w, y+h, z-d), (x+w, y+h, z)
+
+
+Things to do:
+In Attribute:
+	- build a shape library with preset attributes
+	- attribute matching function takes in the shape library and an attribute and 
+	returns the attribute of shape of best fit
+Attributes should have the window stuff in paper and properties for other shapes 
+	(i.e. boolean for whether or not doors have steps leading up to it,  
+	should window have a keystone/balcony)
+
+Active Symbols: F/F1 (facade/flr1/2 facade), CORNICE (cornice, 1 or 2 layer), D (door), 
+	STEP (steps), WIN, B (band),
+Terminal Symbol: BAND, BWIN (tiny band window), WALL(2D terminal), PRISM(3D terminal), 
+	KS (keystone), WINDOW
