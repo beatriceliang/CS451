@@ -38,9 +38,11 @@ Given, lower left corner of cube, these are 4 coords of shape (in order, LL, LR,
 
 Things to do:
 In Attribute:
-	- build a shape library with preset attributes
-	- attribute matching function takes in the shape library and an attribute and 
-	returns the attribute of shape of best fit
+	- build an attribute library with preset attributes
+	- attribute matching function takes in the attribute library and an attribute and 
+	returns the attribute of shape of best fit (ex: takes in attribute with symbol 
+	‘WIN’. Look for attribute of best fit with symbol ‘WIN’ and returns)
+
 Attributes should have the window stuff in paper and properties for other shapes 
 	(i.e. boolean for whether or not doors have steps leading up to it,  
 	should window have a keystone/balcony)
