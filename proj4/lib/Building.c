@@ -126,7 +126,7 @@ void building_setup( Building *b, int w, int d, int h, int roof,
   dir[0] = 0;
   dir[1] = 1;
   dir[2] = 0;
-  ll_add( b->design, shape_new( "R", xyz, rwdh, rc, 0, NULL, dir));
+  ll_add( b->design, shape_new( "R", xyz, rwdh, rc, 0, a, dir));
 
   for(l = 0; l < b->floors; l++){
     for(c = 0; c < b->cols; c++){

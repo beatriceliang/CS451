@@ -40,6 +40,11 @@ Shape *shape_new( char *symbol, float *xyz, float *wdh, int *rc, int floor,
       return(NULL);
     }
     attribute_copy( s->a, a );
+    
+    //Copy symbol over to attribute
+    free(s->a->symbol);
+    s->a->symbol = malloc(strlen(s->symbol)+1);
+    strcpy( s->a->symbol, s->symbol );
   }
   else 
     s->a = NULL;
