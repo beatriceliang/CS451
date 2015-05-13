@@ -24,7 +24,7 @@ Building *building_new( void ){
   b->active = ll_new();
   b->design = ll_new();
   b->door = 0;
-
+  b->lib = attribute_lib();
   return b;
 }
 
@@ -54,7 +54,7 @@ void building_init( Building *b, int w, int d, int h, int roof ){
   dir[0] = 0;
   dir[1] = 1;
   dir[2] = 0;
-  ll_add( b->design, shape_new( "R", xyz, rwdh, rc, 0, NULL, dir));
+  ll_add( b->design, shape_new( "R", xyz, rwdh, rc, 0, attribute_new(), dir));
 
   for(l = 0; l < b->floors; l++){
     for(c = 0; c < b->cols; c++){
@@ -255,12 +255,18 @@ void building_partition( Building *b ){
 
 /* Frees memory of the fields of building and itself */
 void building_delete( Building *b ){
+  int i;
 
   if(b){
     if(b->active)
       ll_delete( b->active );
     if(b->design)
       ll_delete( b->design );
+    if(b->lib){
+      for(i = 0; i < (sizeof(b->lib)/sizeof(Attribute)); i++)
+	attribute_delete(b->lib[i]);
+      free(b->lib);
+    } 
     free(b);
   }
 }

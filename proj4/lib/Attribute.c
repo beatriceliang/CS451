@@ -8,9 +8,31 @@
 
 #define USECPP 0
 
-/* Set all fields to null if possible */
-void attribute_init( Attribute *a ){
-  a->symbol = NULL;
+/* Set all fields to default facade */
+Attribute *attribute_new( void ){
+
+  Attribute *a;
+  a = malloc(sizeof(Attribute));
+
+  if(!a){
+    printf("attribute_new(): unable to allocate attribute memory\n");
+    return(NULL);
+  }
+  a->symbol = malloc(2);
+  strcpy( a->symbol, "F" );
+  //other default stuff
+
+  return a;
+}
+
+/* Build an attribute library. Returns array of Attribute pointer */
+Attribute **attribute_lib( void ){
+  return NULL;
+}
+
+/* Returns attribute of best match */
+Attribute *attribute_match( Attribute **lib, Attribute *a ){
+  return NULL;
 }
 
 /* Copies attribute from from to to */

@@ -39,7 +39,6 @@ Shape *shape_new( char *symbol, float *xyz, float *wdh, int *rc, int floor,
       free(s);
       return(NULL);
     }
-    attribute_init( s->a );
     attribute_copy( s->a, a );
   }
   else 

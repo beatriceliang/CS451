@@ -22,9 +22,6 @@ void sim_setup( void ){
   b = building_new();
   building_init( b, 10, 10, 17, 1 );
   building_partition( b );
-
-  printf(" Finished \n");
-
 }
 
 void draw_building( void ){
@@ -32,7 +29,7 @@ void draw_building( void ){
   s = ll_head( b->active );
 
   while( s ){
-    printf("%s \n", s->symbol);
+    //printf("%s \n", s->symbol);
     glBegin(GL_QUADS);
     glNormal3d( s->dir[0], s->dir[1], s->dir[2]);
     /*
