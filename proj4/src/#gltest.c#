@@ -22,9 +22,6 @@ void sim_setup( void ){
   b = building_new();
   building_init( b, 10, 10, 17, 1 );
   building_partition( b );
-
-  printf(" Finished \n");
-
 }
 
 void draw_building( void ){

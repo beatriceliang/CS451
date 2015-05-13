@@ -19,13 +19,6 @@ Shape *shape_new( char *symbol, float *xyz, float *wdh, int *rc, int floor,
     return(NULL);
   }
 
-  s->a = malloc(sizeof(Attribute));
-  if(!s->a){
-    printf("shape_new(): unable to allocate attribute memory\n");
-    free(s);
-    return(NULL);
-  }
-
   s->symbol = malloc(strlen(symbol) + 1);
   strcpy(s->symbol, symbol);
   
@@ -39,9 +32,18 @@ Shape *shape_new( char *symbol, float *xyz, float *wdh, int *rc, int floor,
   s->rc[0] = rc[0];
   s->rc[1] = rc[1];
   s->floor = floor;
-  attribute_init( s->a );
-  if(a)
+  if(a){
+    s->a = malloc(sizeof(Attribute));
+    if(!s->a){
+      printf("shape_new(): unable to allocate attribute memory\n");
+      free(s);
+      return(NULL);
+    }
+    attribute_init( s->a );
     attribute_copy( s->a, a );
+  }
+  else 
+    s->a = NULL;
   s->dir[0] = dir[0];
   s->dir[1] = dir[1];
   s->dir[2] = dir[2];

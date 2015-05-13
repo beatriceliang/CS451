@@ -47,7 +47,7 @@ Attributes should have the window stuff in paper and properties for other shapes
 	(i.e. boolean for whether or not doors have steps leading up to it,  
 	should window have a keystone/balcony)
 
-Active Symbols: F/F1 (facade/flr1/2 facade), CORNICE (cornice, 1 or 2 layer), D (door), 
+Active Symbols: F/F1 (facade/flr1/2 facade), CORNICE (cornice, 1 or 2 layer), DOOR, 
 	STEP (steps), WIN, B (band),
 Terminal Symbol: BAND, BWIN (tiny band window), WALL(2D terminal), PRISM(3D terminal), 
 	KS (keystone), WINDOW
