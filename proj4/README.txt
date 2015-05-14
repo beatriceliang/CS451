@@ -43,11 +43,20 @@ In Attribute:
 	returns the attribute of shape of best fit (ex: takes in attribute with symbol 
 	‘WIN’. Look for attribute of best fit with symbol ‘WIN’ and returns)
 
+Symbols Needing matching:
+Actually just do matching for window please. Given interval for simple, match one.
+All else plays role in user specification
+- F/F1: KS or not above window
+- WIN: Frame pattern
+- DOOR: Steps or not
+- CORNICE: number of layer
+- BAND: tiny window or not
+
 Attributes should have the window stuff in paper and properties for other shapes 
 	(i.e. boolean for whether or not doors have steps leading up to it,  
 	should window have a keystone/balcony)
 
 Active Symbols: F/F1 (facade/flr1/2 facade), CORNICE (cornice, 1 or 2 layer), DOOR, 
-	STEP (steps), WIN, B (band),
-Terminal Symbol: BAND, BWIN (tiny band window), WALL(2D terminal), PRISM(3D terminal), 
+	STEP (steps), WIN, BAND
+Terminal Symbol: BWIN (tiny band window), WALL(2D terminal), PRISM(3D terminal), 
 	KS (keystone), WINDOW

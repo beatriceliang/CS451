@@ -5,6 +5,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <math.h>
+#include <time.h>
 #include "graphics.h"
 
 #define USECPP 0
@@ -68,28 +69,32 @@ void building_init( Building *b, int w, int d, int h, int roof ){
 	  dir[0] = 0;
 	  dir[1] = 0;
 	  dir[2] = 1;
-	  ll_add( b->active, shape_new( "F", xyz, wdh, rc, l, NULL, dir));
+	  ll_add( b->active, shape_new( "F", xyz, wdh, rc, l, 
+					attribute_new(), dir));
 	  counter++;
 	}
 	if(r == b->rows-1){
 	  dir[0] = 0;
 	  dir[1] = 0;
 	  dir[2] = -1;
-	  ll_add( b->active, shape_new( "F", xyz, wdh, rc, l, NULL, dir));
+	  ll_add( b->active, shape_new( "F", xyz, wdh, rc, l, 
+					attribute_new(), dir));
 	  counter++;
 	}
 	if(c == 0){
 	  dir[0] = -1;
 	  dir[1] = 0;
 	  dir[2] = 0;
-	  ll_add( b->active, shape_new( "F", xyz, wdh, rc, l, NULL, dir));
+	  ll_add( b->active, shape_new( "F", xyz, wdh, rc, l, 
+					attribute_new(), dir));
 	  counter++;
 	}
 	if(c == b->cols-1){
 	  dir[0] = 1;
 	  dir[1] = 0;
 	  dir[2] = 0;
-	  ll_add( b->active, shape_new( "F", xyz, wdh, rc, l, NULL, dir));
+	  ll_add( b->active, shape_new( "F", xyz, wdh, rc, l, 
+					attribute_new(), dir));
 	  counter++;
 	}	
       }
@@ -97,6 +102,7 @@ void building_init( Building *b, int w, int d, int h, int roof ){
     if(l == 0)
       b->numFacade = counter;
   }
+  printf("exiting building_init\n");
 }
 
 /* Divide up building by user specification */
@@ -179,6 +185,8 @@ void building_partition( Building *b ){
 
   s = ll_pop( b->active );
   i = 0;
+  srand(time(NULL));
+  rand();
   doorNum = rand() % b->numFacade;
 
   while(s){
@@ -187,20 +195,33 @@ void building_partition( Building *b ){
     if( b->door == 0  && i == doorNum){
       b->door = 1;
       //add wall around door
-      wdh[0] = s->wdh[0]/8;
-      wdh[1] = s->wdh[1];
+      if(s->dir[2] == 0){
+	wdh[0] = s->wdh[0];
+	wdh[1] = s->wdh[1]/8;
+      }
+      else{
+	wdh[0] = s->wdh[0]/8;
+	wdh[1] = s->wdh[1];
+      }
       wdh[2] = s->wdh[2];
       ll_add( b->design, shape_new( "WALL", s->xyz, wdh, s->rc, s->floor, 
 				    s->a, s->dir ) );
-      xyz[0] = s->xyz[0] + (wdh[0]*7);
+      xyz[0] = s->xyz[0] + ((wdh[0]*7)*s->dir[2]*s->dir[2]);
       xyz[1] = s->xyz[1];
-      xyz[2] = s->xyz[2];
+      xyz[2] = s->xyz[2] - ((wdh[1]*7)*s->dir[0]*s->dir[0]);
       ll_add( b->design, shape_new( "WALL", xyz, wdh, s->rc, s->floor, 
 				    s->a, s->dir ) );
-      xyz[0] = s->xyz[0] + wdh[0];
+      xyz[0] = s->xyz[0] + (wdh[0]*s->dir[2]*s->dir[2]);
       xyz[1] = s->xyz[1] + (s->wdh[2]*0.8);
-      xyz[2] = s->xyz[2];
-      wdh[0] = wdh[0]*6;
+      xyz[2] = s->xyz[2] - (wdh[1]*s->dir[0]*s->dir[0]);
+      if(s->dir[2] == 0){
+	wdh[0] = wdh[0];
+	wdh[1] = wdh[1]*6;
+      }
+      else{
+	wdh[0] = wdh[0]*6;
+	wdh[1] = wdh[1];
+      }
       wdh[2] = s->wdh[2]/5;
       ll_add( b->design, shape_new( "WALL", xyz, wdh, s->rc, s->floor, 
 				    s->a, s->dir ) );
@@ -218,7 +239,7 @@ void building_partition( Building *b ){
 	wdh[0] = s->wdh[0];
 	wdh[1] = s->wdh[1];
 	wdh[2] = s->wdh[2]/5;
-	ll_add( b->active, shape_new( "B", s->xyz, wdh, s->rc, s->floor,
+	ll_add( b->active, shape_new( "BAND", s->xyz, wdh, s->rc, s->floor,
 				      s->a, s->dir ) );
 	xyz[0] = s->xyz[0];
 	xyz[1] = s->xyz[1] + wdh[2];	
@@ -230,24 +251,70 @@ void building_partition( Building *b ){
 	s = ll_pop(b->active);
       }
       //Don't need else if b/c diff floor conditions, aka doesnt affect door
-      //Second floor w/ no cornice
-      if( s->floor == 1 && strcmp(s->symbol, "F") == 0 ){
-	wdh[0] = s->wdh[0];
-	wdh[1] = s->wdh[1];
-	wdh[2] = s->wdh[2]/7;
-	ll_add( b->active, shape_new( "CORNICE", s->xyz, wdh, s->rc, s->floor,
-				      s->a, s->dir ) );
-	xyz[0] = s->xyz[0];
-	xyz[1] = s->xyz[1]+wdh[2];
-	xyz[2] = s->xyz[2];
-	wdh[2] = wdh[2]*6;
-	ll_add( b->active, shape_new( "F1", xyz, wdh, s->rc, s->floor, 
-				      s->a, s->dir ) );
-	shape_delete(s);
-	s = ll_pop(b->active);
+      //Second floor facade w/ no cornice
+      else {
+	if( s->floor == 1 && strcmp(s->symbol, "F") == 0 ){
+	  wdh[0] = s->wdh[0];
+	  wdh[1] = s->wdh[1];
+	  wdh[2] = s->wdh[2]/7;
+	  ll_add( b->active, shape_new( "CORNICE", s->xyz, wdh, s->rc, s->floor,
+					s->a, s->dir ) );
+	  xyz[0] = s->xyz[0];
+	  xyz[1] = s->xyz[1]+wdh[2];
+	  xyz[2] = s->xyz[2];
+	  wdh[2] = wdh[2]*6;
+	  ll_add( b->active, shape_new( "F1", xyz, wdh, s->rc, s->floor, 
+					s->a, s->dir ) );
+	  shape_delete(s);
+	  s = ll_pop(b->active);
+	}
+	//Divides facades into wall and window and maybe keystone
+	else{
+	  if( (s->floor > 1 && strcmp( s->symbol, "F") == 0) || 
+	      (strcmp( s->symbol, "F1" ) == 0) ){
+	    if(s->dir[2] == 0){
+	      wdh[0] = s->wdh[0];
+	      wdh[1] = 2.0*s->wdh[1]/7.0;
+	    }
+	    else{
+	      wdh[0] = 2.0*s->wdh[0]/7.0;
+	      wdh[1] = s->wdh[1];
+	    }
+	    wdh[2] = s->wdh[2];
+	    ll_add( b->design, shape_new( "WALL", s->xyz, wdh, s->rc, s->floor, 
+					  s->a, s->dir ) );
+	    xyz[0] = s->xyz[0] + ((wdh[0]*2.5)*s->dir[2]*s->dir[2]);
+	    xyz[1] = s->xyz[1];
+	    xyz[2] = s->xyz[2] - ((wdh[1]*2.5)*s->dir[0]*s->dir[0]);
+	    ll_add( b->design, shape_new( "WALL", xyz, wdh, s->rc, s->floor, 
+					  s->a, s->dir ) );
+	    if(s->dir[2] == 0){
+	      wdh[0] = s->wdh[0];
+	      wdh[1] = 3.0*s->wdh[1]/7.0;
+	    }
+	    else{
+	      wdh[0] = 3.0*s->wdh[0]/7.0;
+	      wdh[1] = s->wdh[1];
+	    }
+
+	    wdh[2] = wdh[2]/4.0;
+	    xyz[0] = s->xyz[0] + ((2.0*s->wdh[0]/7.0)*s->dir[2]*s->dir[2]);
+	    xyz[2] = s->xyz[2] - ((2.0*s->wdh[1]/7.0)*s->dir[0]*s->dir[0]);
+	    ll_add( b->design, shape_new( "WALL", xyz, wdh, s->rc, s->floor, 
+					  s->a, s->dir ) );
+	    shape_delete(s);
+	    s = ll_pop(b->active);
+	    //has keystone
+	    //if( s->a->ks == 1 ){
+	  }
+	  //To Be Continued
+	  else{
+	    shape_delete(s);
+	    s = ll_pop(b->active);
+	    //return;
+	  }
+	}
       }
-      //To Be Continued
-	
     }
   }
   printf(" Existing partition\n");

@@ -10,7 +10,7 @@
 
 /* Set all fields to default facade */
 Attribute *attribute_new( void ){
-
+  printf("attribute_new\n");
   Attribute *a;
   a = malloc(sizeof(Attribute));
 
@@ -20,8 +20,21 @@ Attribute *attribute_new( void ){
   }
   a->symbol = malloc(2);
   strcpy( a->symbol, "F" );
-  //other default stuff
-
+  a->step = 1;
+  a->ks = 1;
+  a->corniceNum = 2;
+  a->bWindow = 0;
+  a->wood.c[0] = 0.395; 
+  a->wood.c[1] = 0.168;
+  a->wood.c[2] = 0.0;
+  a->secondary.c[0] = 0.836; 
+  a->secondary.c[1] = 0.715;
+  a->secondary.c[2] = 0.660;
+  a->primary.c[0] = 0.691; 
+  a->primary.c[1] = 0.539;
+  a->primary.c[2] = 0.426;
+  a->simple = 1.0;
+  a->balc = 0;
   return a;
 }
 

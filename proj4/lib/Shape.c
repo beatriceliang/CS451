@@ -39,6 +39,7 @@ Shape *shape_new( char *symbol, float *xyz, float *wdh, int *rc, int floor,
       free(s);
       return(NULL);
     }
+    s->a->symbol = NULL;
     attribute_copy( s->a, a );
     
     //Copy symbol over to attribute
