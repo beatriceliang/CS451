@@ -539,9 +539,8 @@ void building_partition( Building *b ){
 		  wdh[0] = s->wdh[0]/10;
 		  wdh[1] = 0.25;
 		  wdh[2] = s->wdh[2];
-		  //wdh[2] = 0;
 		  printf( "%f, %f, %f, %f, %f, %f \n", xyz[0],xyz[1],xyz[2], wdh[0], wdh[1],wdh[2]);
-		  ll_add(b->design, shape_new( "WALL", xyz, wdh, s->rc, s->floor, 
+		  ll_add(b->design, shape_new( "PRISM", xyz, wdh, s->rc, s->floor, 
 					    s->a, s->dir ) );
 		}
 		shape_delete(s);

@@ -21,7 +21,7 @@ Building *b;
 
 void sim_setup( void ){
   b = building_new();
-  building_init( b, 14, 7, 25, 1 );
+  building_init( b, 14, 7, 17, 1 );
   building_partition( b );
 }
 
@@ -74,23 +74,29 @@ void shape_draw( Shape *s ){
     glEnd();
   }
   else if( strcmp(s->symbol, "PRISM") == 0 ){
+    glColor4f( s->a->primary.c[0], 
+	       s->a->primary.c[1],
+	       s->a->primary.c[2], 1.0f );
       glPushMatrix();
       if(s->dir[0]==1){
-          glTranslatef(s->wdh[0]/2, s->wdh[1]/2, -1*s->wdh[2]/2);
+          glTranslatef(s->xyz[0]+s->wdh[0]/2, s->xyz[1]+s->wdh[2]/2, 
+		       s->xyz[2]-s->wdh[1]/2);
       }
       if(s->dir[0]==-1){
-          glTranslatef(-1*s->wdh[0]/2, s->wdh[1]/2, -1*s->wdh[2]/2);
+          glTranslatef(s->xyz[0]-s->wdh[0]/2, s->xyz[1]+s->wdh[2]/2,
+		       s->xyz[2]-s->wdh[1]/2);
       }
       if(s->dir[2]==1){
-          glTranslatef(s->wdh[0]/2, s->wdh[1]/2, s->wdh[2]/2);
+          glTranslatef(s->xyz[0]+s->wdh[0]/2, s->xyz[1]+s->wdh[2]/2, 
+		       s->xyz[2]+s->wdh[1]/2);
       }
       if(s->dir[2]==-1){
-          glTranslatef(s->wdh[0]/2, s->wdh[1]/2, -1*s->wdh[2]/2);
+          glTranslatef(s->xyz[0]+s->wdh[0]/2, s->xyz[1]+s->wdh[2]/2, 
+		       s->xyz[2]-s->wdh[1]/2);
       }
-      glScalef(s->wdh[0],s->wdh[1], s->wdh[2]);
+      glScalef(s->wdh[0],s->wdh[2], s->wdh[1]);
       glutSolidCube(1);
       glPopMatrix();
-      
   }
   else{
       
@@ -163,7 +169,7 @@ void display(void) {
   glPushMatrix();
   glTranslatef( s->wdh[0]/2.0, 16.5, -s->wdh[1]/2.0);
   glScalef(s->wdh[0], s->wdh[2], s->wdh[1]);
-  //glutSolidCube(1);
+  glutSolidCube(1);
   glPopMatrix(); 
   
   // draw everything
