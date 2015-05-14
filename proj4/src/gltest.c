@@ -21,7 +21,7 @@ Building *b;
 
 void sim_setup( void ){
   b = building_new();
-  building_init( b, 10, 10, 17, 1 );
+  building_init( b, 14, 7, 25, 1 );
   building_partition( b );
 }
 
@@ -143,7 +143,7 @@ void display(void) {
   glPushMatrix();
   glTranslatef( s->wdh[0]/2.0, 16.5, -s->wdh[1]/2.0);
   glScalef(s->wdh[0], s->wdh[2], s->wdh[1]);
-  glutSolidCube(1);
+  //glutSolidCube(1);
   glPopMatrix(); 
   
   // draw everything

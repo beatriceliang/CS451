@@ -221,11 +221,11 @@ void building_partition( Building *b ){
       }
       wdh[2] = s->wdh[2]*0.8;
       ll_add( b->design, shape_new( "WALL", xyz, wdh, s->rc, s->floor, 
-				    s->a, s->dir ) );
+      				    s->a, s->dir ) );
       xyz[0] = s->xyz[0] + ((wdh[0]*7)*s->dir[2]*s->dir[2]);
       xyz[2] = s->xyz[2] - ((wdh[1]*7)*s->dir[0]*s->dir[0]);
       ll_add( b->design, shape_new( "WALL", xyz, wdh, s->rc, s->floor, 
-				    s->a, s->dir ) );
+      				    s->a, s->dir ) );
       xyz[0] = s->xyz[0] + (wdh[0]*s->dir[2]*s->dir[2]);
       xyz[1] = s->xyz[1] + (s->wdh[2]*0.8);
       xyz[2] = s->xyz[2] - (wdh[1]*s->dir[0]*s->dir[0]);
@@ -239,7 +239,7 @@ void building_partition( Building *b ){
       }
       wdh[2] = s->wdh[2]/5;
       ll_add( b->design, shape_new( "WALL", xyz, wdh, s->rc, s->floor, 
-				    s->a, s->dir ) );
+      				    s->a, s->dir ) );
       
 
       Color_copy(&s->a->primary, &s->a->secondary);     
@@ -262,11 +262,19 @@ void building_partition( Building *b ){
       ll_add( b->design, shape_new( "WALL", xyz, wdh, s->rc, s->floor, 
 				    s->a, s->dir ) );
 
-
+      xyz[0] = s->xyz[0] + ((s->wdh[0]/8)*s->dir[2]*s->dir[2]);
       xyz[1] = s->xyz[1];
+      xyz[2] = s->xyz[2] - ((s->wdh[1]/8)*s->dir[0]*s->dir[0]);
       wdh[2] = s->wdh[2]*0.8;
-
-      ll_add( b->active, shape_new( "DOOR", xyz, wdh, s->rc, s->floor, 
+      if(s->dir[2] == 0){
+	wdh[0] = s->wdh[0];
+	wdh[1] = s->wdh[1]*0.75;
+      }
+      else{
+	wdh[0] = s->wdh[0]*0.75;
+	wdh[1] = s->wdh[1];
+      }
+     ll_add( b->active, shape_new( "DOOR", xyz, wdh, s->rc, s->floor, 
 				    s->a, s->dir ) );
       shape_delete(s);
       s = ll_pop(b->active);
@@ -517,9 +525,32 @@ void building_partition( Building *b ){
 	    }
 	    //To Be Continued
 	    else{
-	      shape_delete(s);
-	      s = ll_pop(b->active);
-	      //return;
+	      if( strcmp( s->symbol, "DOOR") == 0 ){
+		//frame of door
+		printf("here \n");
+		Color_copy( &s->a->primary, &s->a->secondary );
+		if(s->dir[0] == 0){
+		  xyz[0] = s->xyz[0];
+		  xyz[1] = s->xyz[1];
+		  if(s->dir[2] == -1)
+		    xyz[2] = s->xyz[2] - s->wdh[1] + 0.25;
+		    else
+		    xyz[2] = s->xyz[2];
+		  wdh[0] = s->wdh[0]/10;
+		  wdh[1] = 0.25;
+		  wdh[2] = s->wdh[2];
+		  //wdh[2] = 0;
+		  printf( "%f, %f, %f, %f, %f, %f \n", xyz[0],xyz[1],xyz[2], wdh[0], wdh[1],wdh[2]);
+		  ll_add(b->design, shape_new( "WALL", xyz, wdh, s->rc, s->floor, 
+					    s->a, s->dir ) );
+		}
+		shape_delete(s);
+		s = ll_pop(b->active);
+	      }
+	      else{
+		shape_delete(s);
+		s = ll_pop(b->active);
+	      }
 	    }
 	  }
 	}
