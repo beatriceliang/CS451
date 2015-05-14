@@ -61,7 +61,21 @@ void shape_draw( Shape *s ){
       glVertex3f(s->xyz[0]+s->wdh[0], s->xyz[1], s->xyz[2]-s->wdh[1]);
       glVertex3f(s->xyz[0]+s->wdh[0], s->xyz[1]+s->wdh[2], s->xyz[2]-s->wdh[1]);
       glVertex3f(s->xyz[0]+s->wdh[0], s->xyz[1]+s->wdh[2], s->xyz[2]);
-      }
+    }
+    //upward facing
+    if(s->dir[1] == 1){
+      glVertex3f(s->xyz[0], s->xyz[1]+s->wdh[2], s->xyz[2]);
+      glVertex3f(s->xyz[0]+s->wdh[0], s->xyz[1]+s->wdh[2], s->xyz[2]);
+      glVertex3f(s->xyz[0]+s->wdh[0], s->xyz[1]+s->wdh[2], s->xyz[2]-s->wdh[1]);
+      glVertex3f(s->xyz[0], s->xyz[1]+s->wdh[2], s->xyz[2]-s->wdh[1]);
+    }
+    //downward facing
+    if(s->dir[1] == -1){
+      glVertex3f(s->xyz[0], s->xyz[1], s->xyz[2]);
+      glVertex3f(s->xyz[0]+s->wdh[0], s->xyz[1]+s->wdh[2], s->xyz[2]);
+      glVertex3f(s->xyz[0]+s->wdh[0], s->xyz[1]+s->wdh[2], s->xyz[2]-s->wdh[1]);
+      glVertex3f(s->xyz[0], s->xyz[1], s->xyz[2]-s->wdh[1]);
+    }
     glEnd();
   }
   else{

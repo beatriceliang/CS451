@@ -17,7 +17,8 @@ typedef struct{
   int corniceNum; //number of layers (prisms)
   int bWindow; // 0 if no band window
   int balc; // 0 if no balcony
-  float simple; //divider design (see paper)
+  int winDiv[2]; //horizontal and vertical divider
+  float ratio[2]; //range of acceptable window length to height ratio
   Color primary;
   Color secondary;
   Color wood;
@@ -53,6 +54,7 @@ typedef struct{
   LinkedList *active; //active shapes to be partitioned
   LinkedList *design; //terminal building design
   Attribute **lib;
+  Attribute **window;
   int rows;
   int cols;
   int floors;

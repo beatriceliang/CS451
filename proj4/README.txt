@@ -36,27 +36,20 @@ Given, lower left corner of cube, these are 4 coords of shape (in order, LL, LR,
        - c = max (right): (x+w, y, z), (x+w, y, z-d), (x+w, y+h, z-d), (x+w, y+h, z)
 
 
-Things to do:
-In Attribute:
-	- build an attribute library with preset attributes
-	- attribute matching function takes in the attribute library and an attribute and 
-	returns the attribute of shape of best fit (ex: takes in attribute with symbol 
-	‘WIN’. Look for attribute of best fit with symbol ‘WIN’ and returns)
-
-Symbols Needing matching:
-Actually just do matching for window please. Given interval for simple, match one.
-All else plays role in user specification
-- F/F1: KS or not above window
-- WIN: Frame pattern
-- DOOR: Steps or not
-- CORNICE: number of layer
-- BAND: tiny window or not
-
-Attributes should have the window stuff in paper and properties for other shapes 
-	(i.e. boolean for whether or not doors have steps leading up to it,  
-	should window have a keystone/balcony)
-
 Active Symbols: F/F1 (facade/flr1/2 facade), CORNICE (cornice, 1 or 2 layer), DOOR, 
 	STEP (steps), WIN, BAND
 Terminal Symbol: BWIN (tiny band window), WALL(2D terminal), PRISM(3D terminal), 
 	KS (keystone), WINDOW
+
+Things to do:
+In Attribute:
+	- build an attribute library with preset attributes
+	- attribute matching function takes in the attribute library and an attribute and 
+	returns the attribute of shape of best fit 
+
+Symbols Needing matching:
+Do attribute matching for window.
+Given a range of window length to height ration, have several options of frame diver options
+
+
+

@@ -182,6 +182,7 @@ void building_partition( Building *b ){
   int i, doorNum;
   float xyz[3];
   float wdh[3];
+  int dir[3];
 
   s = ll_pop( b->active );
   i = 0;
@@ -302,10 +303,160 @@ void building_partition( Building *b ){
 	    xyz[2] = s->xyz[2] - ((2.0*s->wdh[1]/7.0)*s->dir[0]*s->dir[0]);
 	    ll_add( b->design, shape_new( "WALL", xyz, wdh, s->rc, s->floor, 
 					  s->a, s->dir ) );
+	   
+	    /******************************************/
+	    /*******DOESN'T ACTUALLY BELONG HERE*******/
+	    /*********WITH ACTUAL WINDOW PLACEMENT*****/
+	    /******************************************/
+	    if(s->dir[0] == 0){
+	      //top frame
+	      xyz[0] = s->xyz[0] + s->wdh[0]*2.0/7.0;
+	      xyz[1] = s->xyz[1] + s->wdh[2]*0.75;
+	      wdh[0] = s->wdh[0]*3.0/7.0;
+	      wdh[1] = 0.25;
+	      wdh[2] = 0.0;
+	      dir[0] = 0;
+	      dir[1] = -1;
+	      dir[2] = 0;
+	      if(s->dir[2] == 1)
+		xyz[2] = s->xyz[2];
+	      else
+		xyz[2] = s->xyz[2] - s->wdh[1] + 0.25;
+	      ll_add( b->design, shape_new( "WALL", xyz, wdh, s->rc, s->floor, 
+					    s->a, dir ) );
+	      //bottom frame 
+	      xyz[1] = s->xyz[1];
+	      wdh[2] = s->wdh[2]/4.0;
+	      dir[1] = 1;
+	      if(s->dir[2] == 1)
+		xyz[2] = s->xyz[2];
+	      else
+		xyz[2] = s->xyz[2] - s->wdh[1] + 0.25;
+	      ll_add( b->design, shape_new( "WALL", xyz, wdh, s->rc, s->floor, 
+					    s->a, dir ) );
+	      //left frame
+	      xyz[0] = s->xyz[0];
+	      xyz[1] = s->xyz[1] + wdh[2];
+	      wdh[0] = s->wdh[0]*2.0/7.0;
+	      wdh[1] = 0.25;
+	      wdh[2] = wdh[2]*2;
+	      dir[1] = 0;
+	      dir[0] = 1;
+	      if(s->dir[2] == 1)
+		xyz[2] = s->xyz[2];
+	      else
+		xyz[2] = s->xyz[2] - s->wdh[1] + 0.25;
+	      ll_add( b->design, shape_new( "WALL", xyz, wdh, s->rc, s->floor, 
+					    s->a, dir ) );
+
+	      //right frame
+	      xyz[0] = xyz[0] + s->wdh[0]*5.0/7.0;
+	      dir[0] = -1;
+	      if(s->dir[2] == 1)
+		xyz[2] = s->xyz[2];
+	      else
+		xyz[2] = s->xyz[2] - s->wdh[1] + 0.25;
+	      ll_add( b->design, shape_new( "WALL", xyz, wdh, s->rc, s->floor, 
+					    s->a, dir ) );
+	    }
+	    else{
+	      //top frame  
+	      xyz[1] = s->xyz[1] + s->wdh[2]*0.75;
+	      xyz[2] = s->xyz[2] - (s->wdh[1]*2.0/7.0);
+	      wdh[0] = 0.25;
+	      wdh[1] = s->wdh[1]*3.0/7.0;
+	      wdh[2] = 0.0;
+	      dir[0] = 0;
+	      dir[1] = -1;
+	      dir[2] = 0;
+	      if(s->dir[0] == 1)
+		xyz[0] = s->xyz[0] + s->wdh[0] - 0.25;
+	      else
+		xyz[0] = s->xyz[0];
+	      ll_add( b->design, shape_new( "WALL", xyz, wdh, s->rc, s->floor, 
+					    s->a, dir ) );
+	      
+	      //bottom frame 
+	      xyz[1] = s->xyz[1];
+	      wdh[2] = s->wdh[2]/4.0;
+	      dir[1] = 1;
+	      if(s->dir[0] == 1)
+		xyz[0] = s->xyz[0] + s->wdh[0] - 0.25;
+	      else
+		xyz[0] = s->xyz[0] ;
+	      ll_add( b->design, shape_new( "WALL", xyz, wdh, s->rc, s->floor, 
+					    s->a, dir ) );
+	      //left frame
+	      xyz[2] = s->xyz[2];
+	      xyz[1] = s->xyz[1] + (s->wdh[2]*0.25);
+	      wdh[0] = 0.25;
+	      wdh[1] = s->wdh[1]*2.0/7.0;
+	      wdh[2] = s->wdh[2]*0.5;
+	      dir[1] = 0;
+	      dir[2] = -1;
+	      if(s->dir[0] == 1)
+		xyz[0] = s->xyz[0] + s->wdh[0] - 0.25;
+	      else
+		xyz[0] = s->xyz[0];
+	      ll_add( b->design, shape_new( "WALL", xyz, wdh, s->rc, s->floor, 
+					    s->a, dir ) );
+	      
+	      //right frame
+	      xyz[2] = xyz[2] - s->wdh[1]*5.0/7.0;
+	      dir[2] = 1;
+	      if(s->dir[0] == 1)
+		xyz[0] = s->xyz[0] + s->wdh[0] - 0.25;
+	      else
+		xyz[0] = s->xyz[0];
+	      ll_add( b->design, shape_new( "WALL", xyz, wdh, s->rc, s->floor, 
+	      s->a, dir ) );
+	    }	      
+	   
+	    /******************************************/
+	    /*******DOESN'T ACTUALLY BELONG HERE*******/
+	    /*********WITH ACTUAL WINDOW PLACEMENT*****/
+	    /*****************ENDS HERE****************/
+	    /******************************************/
+	    /*
+	    if(s->dir[2] == 0){
+	      wdh[0] = s->wdh[0];
+	      wdh[1] = 3.0*s->wdh[1]/7.0;
+	    }
+	    else{
+	      wdh[0] = 3.0*s->wdh[0]/7.0;
+	      wdh[1] = s->wdh[1];
+	    }
+
+	    wdh[2] = wdh[2]/4.0;
+	    xyz[0] = s->xyz[0] + ((2.0*s->wdh[0]/7.0)*s->dir[2]*s->dir[2]);
+	    xyz[2] = s->xyz[2] - ((2.0*s->wdh[1]/7.0)*s->dir[0]*s->dir[0]);
+	    ll_add( b->design, shape_new( "WALL", xyz, wdh, s->rc, s->floor, 
+					  s->a, s->dir ) );
+
+	    */
+	    xyz[0] = s->xyz[0] + ((2.0*s->wdh[0]/7.0)*s->dir[2]*s->dir[2]);
+	    xyz[1] = s->xyz[1] + s->wdh[2]*0.75;
+	    xyz[2] = s->xyz[2] - ((2.0*s->wdh[1]/7.0)*s->dir[0]*s->dir[0]);
+	    wdh[2] = s->wdh[2]/4;
+	    if(s->dir[2] == 0){
+	      wdh[0] = s->wdh[0];
+	      wdh[1] = s->wdh[1]*3.0/7.0;
+	    }
+	    else{
+	      wdh[0] = s->wdh[0]*3.0/7.0;
+	      wdh[1] = s->wdh[1];
+	    }  
+	    ll_add( b->design, shape_new( "WALL", xyz, wdh, s->rc, s->floor, 
+					  s->a, s->dir ) );
+
+	    //has keystone
+	    if( s->a->ks == 1 && s->floor < 2){
+	      ll_add( b->active, shape_new( "KS", xyz, wdh, s->rc, s->floor, 
+	      s->a, dir ) );
+	    }
 	    shape_delete(s);
 	    s = ll_pop(b->active);
-	    //has keystone
-	    //if( s->a->ks == 1 ){
+	
 	  }
 	  //To Be Continued
 	  else{

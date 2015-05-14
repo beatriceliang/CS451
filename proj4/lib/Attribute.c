@@ -10,7 +10,6 @@
 
 /* Set all fields to default facade */
 Attribute *attribute_new( void ){
-  printf("attribute_new\n");
   Attribute *a;
   a = malloc(sizeof(Attribute));
 
@@ -33,7 +32,9 @@ Attribute *attribute_new( void ){
   a->primary.c[0] = 0.691; 
   a->primary.c[1] = 0.539;
   a->primary.c[2] = 0.426;
-  a->simple = 1.0;
+  a->winDiv[0] = 0;
+  a->winDiv[1] = 0;
+  a->ratio[0] = 2.0/3.0;
   a->balc = 0;
   return a;
 }
