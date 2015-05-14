@@ -9,6 +9,7 @@
 #include <GL/glu.h>
 #include <GL/glut.h>
 #include <math.h>
+#include <string.h>
 #include "graphics.h"
 
 double angle = 0.0;
@@ -64,11 +65,15 @@ void shape_draw( Shape *s ){
     glEnd();
   }
   else{
+    //Numbers are BAD!!!
+    /*
     glPushMatrix();
     glTranslatef( s->wdh[0]/2.0, s->xyz[1]+(s->wdh[2]/2), -s->wdh[1]/2.0);
     glScalef(s->wdh[0], s->wdh[2], s->wdh[1]);
     glutSolidCube(1);
     glPopMatrix(); 
+    */
+    return;
   }
 }
 
