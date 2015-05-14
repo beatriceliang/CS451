@@ -73,7 +73,27 @@ void shape_draw( Shape *s ){
     }
     glEnd();
   }
+  else if( strcmp(s->symbol, "PRISM") == 0 ){
+      glPushMatrix();
+      if(s->dir[0]==1){
+          glTranslatef(s->wdh[0]/2, s->wdh[1]/2, -1*s->wdh[2]/2);
+      }
+      if(s->dir[0]==-1){
+          glTranslatef(-1*s->wdh[0]/2, s->wdh[1]/2, -1*s->wdh[2]/2);
+      }
+      if(s->dir[2]==1){
+          glTranslatef(s->wdh[0]/2, s->wdh[1]/2, s->wdh[2]/2);
+      }
+      if(s->dir[2]==-1){
+          glTranslatef(s->wdh[0]/2, s->wdh[1]/2, -1*s->wdh[2]/2);
+      }
+      glScalef(s->wdh[0],s->wdh[1], s->wdh[2]);
+      glutSolidCube(1);
+      glPopMatrix();
+      
+  }
   else{
+      
     //Numbers are BAD!!!
     /*
     glPushMatrix();
@@ -258,7 +278,7 @@ void keyboard(unsigned char key, int x, int y){
   }
 }
 
-// main function
+// main functione
 int main(int argc, char **argv) {
     
     // initialize
