@@ -74,10 +74,11 @@ void shape_draw( Shape *s ){
     glEnd();
   }
   else if( strcmp(s->symbol, "PRISM") == 0 ){
-    glColor4f( s->a->primary.c[0], 
-	       s->a->primary.c[1],
-	       s->a->primary.c[2], 1.0f );
-      glPushMatrix();
+          glPushMatrix();
+      glColor4f( s->a->primary.c[0],
+                s->a->primary.c[1],
+                s->a->primary.c[2], 1.0f );
+
       if(s->dir[0]==1){
           glTranslatef(s->xyz[0]+s->wdh[0]/2, s->xyz[1]+s->wdh[2]/2, 
 		       s->xyz[2]-s->wdh[1]/2);
@@ -245,6 +246,7 @@ void init(void) {
   glEnable(GL_LIGHT3);
   glEnable(GL_COLOR_MATERIAL);
   glEnable(GL_DEPTH_TEST);
+  glEnable(GL_NORMALIZE);
   
   sim_setup();
 }
