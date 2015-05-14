@@ -52,7 +52,6 @@ Shape *shape_new( char *symbol, float *xyz, float *wdh, int *rc, int floor,
   s->dir[0] = dir[0];
   s->dir[1] = dir[1];
   s->dir[2] = dir[2];
-
   return s;
 }
 

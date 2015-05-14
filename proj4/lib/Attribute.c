@@ -35,6 +35,7 @@ Attribute *attribute_new( void ){
   a->winDiv[0] = 0;
   a->winDiv[1] = 0;
   a->ratio[0] = 2.0/3.0;
+  a->ratio[1] = 2.0/3.0;
   a->balc = 0;
   return a;
 }
@@ -53,9 +54,20 @@ Attribute *attribute_match( Attribute **lib, Attribute *a ){
 void attribute_copy( Attribute *to, Attribute *from ){
   if(to->symbol)
     free(to->symbol);
-
   to->symbol = malloc(strlen(from->symbol) + 1);
   strcpy(to->symbol, from->symbol);
+
+  to->step = from->step;
+  to->ks = from->ks;
+  to->corniceNum = from->corniceNum;
+  to->bWindow = from->bWindow;
+  Color_copy( &to->wood, &from->wood );
+  Color_copy( &to->secondary, &from->secondary );
+  Color_copy( &to->primary, &from->primary );
+  to->winDiv[0] = from->winDiv[0];
+  from->winDiv[1] = from->winDiv[1];
+  to->ratio[0] = from->ratio[0];
+  to->balc = from->balc;
 }
 
 /* Frees memory of the fields of attribute and itself */
@@ -65,4 +77,11 @@ void attribute_delete( Attribute *a ){
       free(a->symbol);
     free(a);
   }
+}
+
+/* copies the Color data. */
+void Color_copy(Color *to, Color *from){
+  to->c[0] = from->c[0];
+  to->c[1] = from->c[1];
+  to->c[2] = from->c[2];
 }

@@ -29,11 +29,6 @@ void shape_draw( Shape *s ){
   if( strcmp(s->symbol, "WALL") == 0 ){
     glBegin(GL_QUADS);
     glNormal3d( s->dir[0], s->dir[1], s->dir[2]);
-    /*
-    glColor4f( (float)(s->rc[0])/(float)(b->rows), 
-	       (float)(s->rc[1])/(float)(b->cols),
-	       (float)(s->floor)/(float)(b->floors), 1.0f );
-    */
     //front facing
     if(s->dir[2] == 1 ){
       glVertex3f(s->xyz[0], s->xyz[1], s->xyz[2]);
@@ -97,12 +92,17 @@ void draw_building( void ){
 
   while( s ){
     //printf("%s \n", s->symbol);
+    /*
     glColor4f( s->xyz[0]/10.0, 
 	       s->xyz[1]/17.0,
 	       -s->xyz[2]/10.0, 1.0f );
-
+    */
+    
+    glColor4f( s->a->primary.c[0], 
+	       s->a->primary.c[1],
+	       s->a->primary.c[2], 1.0f );
     shape_draw( s );
-
+    
     s = ll_next( b->design );
   }
 }
@@ -110,45 +110,46 @@ void draw_building( void ){
 // Function for drawing the contents of the screen
 void display(void) {
     
-    GLfloat position[] = {20.0, 30.0, 40.0, 1.0};
-    Shape *s;
+  //GLfloat position[] = {20.0, 30.0, 40.0, 1.0};
+  GLfloat position0[] = {-100, 70, -100, 1.0};
+  GLfloat position1[] = {-100, 70, 100, 1.0};
+  GLfloat position2[] = { 100, 70, 100, 1.0};
+  GLfloat position3[] = { 100, 70, -100, 1.0};
+  
+  Shape *s;
     // clear screen
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-    glColor4f(1.0, 1.0, 1.0, 1.0);
-    
-    // reset the modelview matrix
-    glLoadIdentity();
-    
-    // set up the viewing transformation
-    /*gluLookAt(posx, 10.0, posz, 
-	    posx+8.0*sin(angle*M_PI/180.0), 
-	    5.0+(4*sin(eyeAngle*M_PI/180.0)), 
-	    posz+8.0*cos(angle*M_PI/180.0), 
-	    0.0, 1.0, 0.0); 
-    */
-    gluLookAt((posx*sin(angle*M_PI/180.0))+5, 
-	      8.0+(8*sin(eyeAngle*M_PI/180.0)), 
-	      (posz*cos(angle*M_PI/180.0))-5, 
-	      5.0, 8.0, -5.0, 0.0, 1.0, 0.0); 
-	      
-    //gluLookAt(0.0, 1.0, 2.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0);
-    
-    // set up the light
-    glLightfv(GL_LIGHT0, GL_POSITION, position);
- 
-    draw_building();
-    s = ll_head( b->design );
-    glColor4f( 1.0f, 0.0f, 0.0f, 1.0f );
-    glPushMatrix();
-    glTranslatef( s->wdh[0]/2.0, 16.5, -s->wdh[1]/2.0);
-    glScalef(s->wdh[0], s->wdh[2], s->wdh[1]);
-    glutSolidCube(1);
-    glPopMatrix(); 
-
-    // draw everything
-    glFlush();
-    usleep(10000);
-    glutPostRedisplay();
+  glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+  glColor4f(1.0, 1.0, 1.0, 1.0);
+  
+  // reset the modelview matrix
+  glLoadIdentity();
+  
+  // set up the viewing transformation
+  gluLookAt((posx*sin(angle*M_PI/180.0))+5, 
+	    8.0+(8*sin(eyeAngle*M_PI/180.0)), 
+	    (posz*cos(angle*M_PI/180.0))-5, 
+	    5.0, 8.0, -5.0, 0.0, 1.0, 0.0); 
+  
+  // set up the light
+  
+  glLightfv(GL_LIGHT0, GL_POSITION, position0);
+  glLightfv(GL_LIGHT1, GL_POSITION, position1);
+  glLightfv(GL_LIGHT2, GL_POSITION, position2);
+  glLightfv(GL_LIGHT3, GL_POSITION, position3);
+  
+  draw_building();
+  s = ll_head( b->design );
+  glColor4f( 1.0f, 0.0f, 0.0f, 1.0f );
+  glPushMatrix();
+  glTranslatef( s->wdh[0]/2.0, 16.5, -s->wdh[1]/2.0);
+  glScalef(s->wdh[0], s->wdh[2], s->wdh[1]);
+  glutSolidCube(1);
+  glPopMatrix(); 
+  
+  // draw everything
+  glFlush();
+  usleep(10000);
+  glutPostRedisplay();
     
 }
 
@@ -177,15 +178,49 @@ void reshape(int w, int h) {
 // init function
 void init(void) {
 
-    // background color
-    glClearColor(1.0, 1.0, 1.0, 1.0);
-    
-    // whether shading is smooth or flat
-    glShadeModel(GL_SMOOTH);
-    
-    glEnable(GL_DEPTH_TEST);
-    
-    sim_setup();
+  GLfloat ambient[] = {0.1, 0.1, 0.1, 1.0};
+  GLfloat diffuse[] = {0.9, 0.9, 0.9, 1.0};
+  GLfloat specular[] = {0.5, 0.5, 0.5, 1.0};
+  GLfloat mat_diffuse[] = {0.3, 0.9, 0.5, 1.0};
+  GLfloat mat_specular[] = {0.2, 0.2, 0.2, 1.0};
+  GLfloat mat_shininess[] = {50.0};
+
+  // background color
+  glClearColor(1.0, 1.0, 1.0, 1.0);
+  
+  // whether shading is smooth or flat
+  glShadeModel(GL_SMOOTH);
+  
+  // material values
+  glMaterialfv(GL_FRONT, GL_DIFFUSE, mat_diffuse);
+  glMaterialfv(GL_FRONT, GL_SPECULAR, mat_specular);
+  glMaterialfv(GL_FRONT, GL_SHININESS, mat_shininess);
+  
+  // generic lighting values
+  glLightModeli(GL_LIGHT_MODEL_LOCAL_VIEWER, 1);
+  glLightModelfv(GL_LIGHT_MODEL_AMBIENT, ambient);
+  
+  // specific light source
+  glLightfv(GL_LIGHT0, GL_DIFFUSE, diffuse);
+  glLightfv(GL_LIGHT0, GL_SPECULAR, specular );
+   glLightfv(GL_LIGHT1, GL_DIFFUSE, diffuse);
+  glLightfv(GL_LIGHT1, GL_SPECULAR, specular );
+  glLightfv(GL_LIGHT2, GL_DIFFUSE, diffuse);
+  glLightfv(GL_LIGHT2, GL_SPECULAR, specular );
+  glLightfv(GL_LIGHT3, GL_DIFFUSE, diffuse);
+  glLightfv(GL_LIGHT3, GL_SPECULAR, specular );
+
+  // enable lighting, light0 and depth testing
+  
+  glEnable(GL_LIGHTING);
+  glEnable(GL_LIGHT0);
+  glEnable(GL_LIGHT1);
+  glEnable(GL_LIGHT2);
+  glEnable(GL_LIGHT3);
+  glEnable(GL_COLOR_MATERIAL);
+  glEnable(GL_DEPTH_TEST);
+  
+  sim_setup();
 }
 
 //  This function is called whenever a key event occurs.

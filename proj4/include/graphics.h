@@ -58,6 +58,7 @@ typedef struct{
   int rows;
   int cols;
   int floors;
+  int height; //height before roof
   int numFacade; //number of facade on first floor (used for random door)
 } Building;
 
@@ -67,6 +68,7 @@ Attribute **attribute_lib( void );
 Attribute *attribute_match( Attribute **lib, Attribute *a );
 void attribute_copy( Attribute *to, Attribute *from );
 void attribute_delete( Attribute *a );
+void Color_copy(Color *to, Color *from);
 
 Shape *shape_new( char *symbol, float *xyz, float *wdh, int *rc, int floor,
 		  Attribute *a, int *dir );

@@ -35,13 +35,19 @@ void building_init( Building *b, int w, int d, int h, int roof ){
   float xyz[3];
   int rc[2];
   int dir[3];
-  int r,c,l;
+  int r,c,l,i;
   int counter = 0;
   float rwdh[3] = { (float)(w), (float)(d), 1.0 };
+
+  b->height = h-1;
 
   b->rows = (int)(d/3.0);
   b->cols = (int)(w/3.0);
   b->floors = (int)((h-1)/4.0);
+
+  b->window = malloc(sizeof(Attribute)*b->floors);
+  for(i=0; i < b->floors; i++)
+    b->window[i] = NULL;
 
   wdh[0] = w/((float)(b->cols));
   wdh[1] = d/((float)(b->rows));
@@ -112,13 +118,19 @@ void building_setup( Building *b, int w, int d, int h, int roof,
   float xyz[3];
   int rc[2];
   int dir[3];
-  int r,c,l;
+  int r,c,l,i;
   int counter = 0;
   float rwdh[3] = { (float)(w), (float)(d), 1.0 };
+
+  b->height = h-1;
 
   b->rows = (int)(d/depth);
   b->cols = (int)(w/width);
   b->floors = (int)((h-1)/height);
+
+  b->window = malloc(sizeof(Attribute)*b->floors);
+  for(i=0; i < b->floors; i++)
+    b->window[i] = NULL;
 
   wdh[0] = (float)w/((float)(b->cols));
   wdh[1] = (float)d/((float)(b->rows));
@@ -195,6 +207,9 @@ void building_partition( Building *b ){
     //set door at this shape
     if( b->door == 0  && i == doorNum){
       b->door = 1;
+      xyz[0] = s->xyz[0];
+      xyz[1] = s->xyz[1] + (s->wdh[2]*0.2);
+      xyz[2] = s->xyz[2];
       //add wall around door
       if(s->dir[2] == 0){
 	wdh[0] = s->wdh[0];
@@ -204,11 +219,10 @@ void building_partition( Building *b ){
 	wdh[0] = s->wdh[0]/8;
 	wdh[1] = s->wdh[1];
       }
-      wdh[2] = s->wdh[2];
-      ll_add( b->design, shape_new( "WALL", s->xyz, wdh, s->rc, s->floor, 
+      wdh[2] = s->wdh[2]*0.8;
+      ll_add( b->design, shape_new( "WALL", xyz, wdh, s->rc, s->floor, 
 				    s->a, s->dir ) );
       xyz[0] = s->xyz[0] + ((wdh[0]*7)*s->dir[2]*s->dir[2]);
-      xyz[1] = s->xyz[1];
       xyz[2] = s->xyz[2] - ((wdh[1]*7)*s->dir[0]*s->dir[0]);
       ll_add( b->design, shape_new( "WALL", xyz, wdh, s->rc, s->floor, 
 				    s->a, s->dir ) );
@@ -226,8 +240,32 @@ void building_partition( Building *b ){
       wdh[2] = s->wdh[2]/5;
       ll_add( b->design, shape_new( "WALL", xyz, wdh, s->rc, s->floor, 
 				    s->a, s->dir ) );
+      
+
+      Color_copy(&s->a->primary, &s->a->secondary);     
+      //band component of door
+      wdh[2] = s->wdh[2]*0.2;
+      if(s->dir[2] == 0){
+	wdh[0] = s->wdh[0];
+	wdh[1] = s->wdh[1]/8;
+      }
+      else{
+	wdh[0] = s->wdh[0]/8;
+	wdh[1] = s->wdh[1];
+      }
+      ll_add( b->design, shape_new( "WALL", s->xyz, wdh, s->rc, s->floor, 
+				    s->a, s->dir ) );
+
+      xyz[0] = s->xyz[0] + ((wdh[0]*7)*s->dir[2]*s->dir[2]);
+      xyz[1] = s->xyz[1];
+      xyz[2] = s->xyz[2] - ((wdh[1]*7)*s->dir[0]*s->dir[0]);
+      ll_add( b->design, shape_new( "WALL", xyz, wdh, s->rc, s->floor, 
+				    s->a, s->dir ) );
+
+
       xyz[1] = s->xyz[1];
       wdh[2] = s->wdh[2]*0.8;
+
       ll_add( b->active, shape_new( "DOOR", xyz, wdh, s->rc, s->floor, 
 				    s->a, s->dir ) );
       shape_delete(s);
@@ -237,17 +275,28 @@ void building_partition( Building *b ){
       //First floor non-doors; partition into band and F1
       if( s->floor == 0 && strcmp(s->symbol, "F") == 0 ){
 	i++;
+
+	xyz[0] = s->xyz[0];
+	xyz[1] = s->xyz[1] + (s->wdh[2]/5);	
+	xyz[2] = s->xyz[2];
+	wdh[0] = s->wdh[0];
+	wdh[1] = s->wdh[1];
+	wdh[2] = s->wdh[2]*0.8;
+	ll_add( b->active, shape_new( "F1", xyz, wdh, s->rc, s->floor,
+				      s->a, s->dir ) );
+
+	Color_copy(&s->a->primary, &s->a->secondary);
+	
+  	xyz[0] = s->xyz[0];
+	xyz[1] = s->xyz[1];
+	xyz[2] = s->xyz[2];
 	wdh[0] = s->wdh[0];
 	wdh[1] = s->wdh[1];
 	wdh[2] = s->wdh[2]/5;
-	ll_add( b->active, shape_new( "BAND", s->xyz, wdh, s->rc, s->floor,
+	ll_add( b->active, shape_new( "BAND", xyz, wdh, s->rc, s->floor,
 				      s->a, s->dir ) );
-	xyz[0] = s->xyz[0];
-	xyz[1] = s->xyz[1] + wdh[2];	
-	xyz[2] = s->xyz[2];
-	wdh[2] = wdh[2]*4;
-	ll_add( b->active, shape_new( "F1", xyz, wdh, s->rc, s->floor,
-				      s->a, s->dir ) );
+
+
 	shape_delete(s);
 	s = ll_pop(b->active);
       }
@@ -265,7 +314,7 @@ void building_partition( Building *b ){
 	  xyz[2] = s->xyz[2];
 	  wdh[2] = wdh[2]*6;
 	  ll_add( b->active, shape_new( "F1", xyz, wdh, s->rc, s->floor, 
-					s->a, s->dir ) );
+	  				s->a, s->dir ) );
 	  shape_delete(s);
 	  s = ll_pop(b->active);
 	}
@@ -458,11 +507,20 @@ void building_partition( Building *b ){
 	    s = ll_pop(b->active);
 	
 	  }
-	  //To Be Continued
 	  else{
-	    shape_delete(s);
-	    s = ll_pop(b->active);
-	    //return;
+	    //divide balcony into tiny windows if true
+	    if( strcmp( s->symbol, "BAND" ) == 0 && s->a->bWindow == 0 ){
+	      ll_add( b->design, shape_new( "WALL", s->xyz, s->wdh, s->rc, s->floor, 
+					    s->a, s->dir ) );
+	      shape_delete(s);
+	      s = ll_pop(b->active);
+	    }
+	    //To Be Continued
+	    else{
+	      shape_delete(s);
+	      s = ll_pop(b->active);
+	      //return;
+	    }
 	  }
 	}
       }
