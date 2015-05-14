@@ -25,7 +25,6 @@ Building *building_new( void ){
   b->active = ll_new();
   b->design = ll_new();
   b->door = 0;
-  b->lib = attribute_lib();
   return b;
 }
 
@@ -35,7 +34,7 @@ void building_init( Building *b, int w, int d, int h, int roof ){
   float xyz[3];
   int rc[2];
   int dir[3];
-  int r,c,l,i;
+  int r,c,l;
   int counter = 0;
   float rwdh[3] = { (float)(w), (float)(d), 1.0 };
 
@@ -44,10 +43,6 @@ void building_init( Building *b, int w, int d, int h, int roof ){
   b->rows = (int)(d/3.0);
   b->cols = (int)(w/3.0);
   b->floors = (int)((h-1)/4.0);
-
-  b->window = malloc(sizeof(Attribute)*b->floors);
-  for(i=0; i < b->floors; i++)
-    b->window[i] = NULL;
 
   wdh[0] = w/((float)(b->cols));
   wdh[1] = d/((float)(b->rows));
@@ -118,7 +113,7 @@ void building_setup( Building *b, int w, int d, int h, int roof,
   float xyz[3];
   int rc[2];
   int dir[3];
-  int r,c,l,i;
+  int r,c,l;
   int counter = 0;
   float rwdh[3] = { (float)(w), (float)(d), 1.0 };
 
@@ -127,10 +122,6 @@ void building_setup( Building *b, int w, int d, int h, int roof,
   b->rows = (int)(d/depth);
   b->cols = (int)(w/width);
   b->floors = (int)((h-1)/height);
-
-  b->window = malloc(sizeof(Attribute)*b->floors);
-  for(i=0; i < b->floors; i++)
-    b->window[i] = NULL;
 
   wdh[0] = (float)w/((float)(b->cols));
   wdh[1] = (float)d/((float)(b->rows));
@@ -527,22 +518,130 @@ void building_partition( Building *b ){
 	    else{
 	      if( strcmp( s->symbol, "DOOR") == 0 ){
 		//frame of door
-		printf("here \n");
 		Color_copy( &s->a->primary, &s->a->secondary );
 		if(s->dir[0] == 0){
 		  xyz[0] = s->xyz[0];
 		  xyz[1] = s->xyz[1];
 		  if(s->dir[2] == -1)
-		    xyz[2] = s->xyz[2] - s->wdh[1] + 0.25;
+		    xyz[2] = s->xyz[2] - s->wdh[1] + 0.1;
 		    else
-		    xyz[2] = s->xyz[2];
+		    xyz[2] = s->xyz[2]-0.1;
 		  wdh[0] = s->wdh[0]/10;
-		  wdh[1] = 0.25;
+		  wdh[1] = 0.2;
 		  wdh[2] = s->wdh[2];
-		  printf( "%f, %f, %f, %f, %f, %f \n", xyz[0],xyz[1],xyz[2], wdh[0], wdh[1],wdh[2]);
 		  ll_add(b->design, shape_new( "PRISM", xyz, wdh, s->rc, s->floor, 
 					    s->a, s->dir ) );
+		  xyz[0] = s->xyz[0] + 9*wdh[0];
+		  ll_add(b->design, shape_new( "PRISM", xyz, wdh, s->rc, s->floor, 
+					       s->a, s->dir ) );
+		  xyz[0] = s->xyz[0];
+		  xyz[1] = s->xyz[1] + s->wdh[2] - (s->wdh[0]/10);
+		  wdh[0] = s->wdh[0];
+		  wdh[2] = s->wdh[0]/10;
+		  ll_add(b->design, shape_new( "PRISM", xyz, wdh, s->rc, s->floor, 
+					       s->a, s->dir ) );
 		}
+		else{
+		  xyz[1] = s->xyz[1];
+		  xyz[2] = s->xyz[2];
+		  if(s->dir[0] == 1)
+		    xyz[0] = s->xyz[0]+s->wdh[0] - 0.1;
+		  else
+		    xyz[0] = s->xyz[0] + 0.1;
+		  wdh[0] = 0.2;
+		  wdh[1] = s->wdh[1]/10;
+		  wdh[2] = s->wdh[2];
+		  ll_add(b->design, shape_new( "PRISM", xyz, wdh, s->rc, s->floor, 
+					    s->a, s->dir ) );
+		  xyz[2] = s->xyz[2] - 9*wdh[1];
+		  ll_add(b->design, shape_new( "PRISM", xyz, wdh, s->rc, s->floor, 
+					       s->a, s->dir ) );
+		  xyz[2] = s->xyz[2];
+		  xyz[1] = s->xyz[1] + s->wdh[2] - (s->wdh[1]/10);
+		  wdh[2] = s->wdh[1]/10;
+		  wdh[1] = s->wdh[1];
+		  ll_add(b->design, shape_new( "PRISM", xyz, wdh, s->rc, s->floor, 
+					       s->a, s->dir ) );
+		}
+
+		//see if the door has steps
+		if(s->a->step == 1){
+		  if(s->dir[0] == 0){
+		    xyz[0] = s->xyz[0] + (s->wdh[0]/10);
+		    xyz[1] = s->xyz[1];
+		    if(s->dir[2] == -1)
+		      xyz[2] = s->xyz[2] - s->wdh[1];
+		    else
+		      xyz[2] = s->xyz[2];
+		    wdh[0] = s->wdh[0]*0.8;
+		    wdh[1] = 0.20;
+		    wdh[2] = 0.60;
+		    ll_add(b->design, shape_new( "PRISM", xyz, wdh, s->rc, s->floor, 
+						 s->a, s->dir ) );
+		    if(s->dir[2] == -1)
+		      xyz[2] = xyz[2] - 0.20;
+		    else
+		      xyz[2] = s->xyz[2] + 0.20;
+		    wdh[2] = 0.40;
+		    ll_add(b->design, shape_new( "PRISM", xyz, wdh, s->rc, s->floor, 
+						 s->a, s->dir ) );
+		    if(s->dir[2] == -1)
+		      xyz[2] = xyz[2] - 0.20;
+		    else
+		      xyz[2] = s->xyz[2] + 0.20;
+		    wdh[2] = 0.20;
+		    ll_add(b->design, shape_new( "PRISM", xyz, wdh, s->rc, s->floor, 
+						 s->a, s->dir ) );
+		  }
+		  else{
+		    xyz[1] = s->xyz[1];
+		    xyz[2] = s->xyz[2] - (s->wdh[1]/10);
+		    if(s->dir[0] == 1)
+		      xyz[0] = s->xyz[0]+s->wdh[0];
+		    else
+		      xyz[0] = s->xyz[0];
+		    wdh[0] = 0.20;
+		    wdh[1] = s->wdh[1]*0.8;
+		    wdh[2] = 0.60;
+		    ll_add(b->design, shape_new( "PRISM", xyz, wdh, s->rc, s->floor, 
+						 s->a, s->dir ) );
+		    if(s->dir[0] == 1)
+		      xyz[0] = xyz[0] + 0.20;
+		    else
+		      xyz[0] = xyz[0] - 0.20;
+		    wdh[2] = 0.40;
+		    ll_add(b->design, shape_new( "PRISM", xyz, wdh, s->rc, s->floor, 
+						 s->a, s->dir ) );
+		    if(s->dir[0] == 1)
+		      xyz[0] = xyz[0] + 0.20;
+		    else
+		      xyz[0] = xyz[0] - 0.20;
+		    wdh[2] = 0.20;
+		    ll_add(b->design, shape_new( "PRISM", xyz, wdh, s->rc, s->floor, 
+						 s->a, s->dir ) );
+		 
+		  }
+		}
+
+		//physical door
+		Color_copy( &s->a->primary, &s->a->wood );
+		xyz[0] = s->xyz[0] + ((s->wdh[0]/10)*s->dir[2]*s->dir[2]);
+		xyz[1] = s->xyz[1];
+		xyz[2] = s->xyz[2] - ((s->wdh[1]/10)*s->dir[0]*s->dir[0]);
+		if(s->dir[0] == 0){
+		  wdh[0] = s->wdh[0]*0.8;
+		  wdh[1] = s->wdh[1];
+		  wdh[2] = s->wdh[2] - (s->wdh[0]/10);
+		}
+		else{
+		  wdh[0] = s->wdh[0];
+		  wdh[1] = s->wdh[1]*0.8;
+		  wdh[2] = s->wdh[2] - (s->wdh[1]/10);
+		}
+		ll_add(b->design, shape_new( "WALL", xyz, wdh, s->rc, s->floor, 
+					     s->a, s->dir ) );
+		
+		  
 		shape_delete(s);
 		s = ll_pop(b->active);
 	      }
@@ -561,18 +660,12 @@ void building_partition( Building *b ){
 
 /* Frees memory of the fields of building and itself */
 void building_delete( Building *b ){
-  int i;
-
+ 
   if(b){
     if(b->active)
       ll_delete( b->active );
     if(b->design)
       ll_delete( b->design );
-    if(b->lib){
-      for(i = 0; i < (sizeof(b->lib)/sizeof(Attribute)); i++)
-	attribute_delete(b->lib[i]);
-      free(b->lib);
-    } 
     free(b);
   }
 }

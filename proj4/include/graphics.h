@@ -53,8 +53,6 @@ typedef struct{
   int door; //whether or not door location has been set
   LinkedList *active; //active shapes to be partitioned
   LinkedList *design; //terminal building design
-  Attribute **lib;
-  Attribute **window;
   int rows;
   int cols;
   int floors;
@@ -64,8 +62,6 @@ typedef struct{
 
 
 Attribute *attribute_new( void );
-Attribute **attribute_lib( void );
-Attribute *attribute_match( Attribute **lib, Attribute *a );
 void attribute_copy( Attribute *to, Attribute *from );
 void attribute_delete( Attribute *a );
 void Color_copy(Color *to, Color *from);

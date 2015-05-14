@@ -40,16 +40,6 @@ Attribute *attribute_new( void ){
   return a;
 }
 
-/* Build an attribute library. Returns array of Attribute pointer */
-Attribute **attribute_lib( void ){
-  return NULL;
-}
-
-/* Returns attribute of best match */
-Attribute *attribute_match( Attribute **lib, Attribute *a ){
-  return NULL;
-}
-
 /* Copies attribute from from to to */
 void attribute_copy( Attribute *to, Attribute *from ){
   if(to->symbol)
