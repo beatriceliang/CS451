@@ -237,12 +237,12 @@ void init(void) {
   glLightfv(GL_LIGHT3, GL_SPECULAR, specular );
 
   // enable lighting, light0 and depth testing
-  
+  /*
   glEnable(GL_LIGHTING);
   glEnable(GL_LIGHT0);
   glEnable(GL_LIGHT1);
   glEnable(GL_LIGHT2);
-  glEnable(GL_LIGHT3);
+  glEnable(GL_LIGHT3);*/
   glEnable(GL_COLOR_MATERIAL);
   glEnable(GL_DEPTH_TEST);
   
