@@ -18,6 +18,9 @@ double posz = 30.0;
 double eyeAngle = 0.0;
 
 Building *b;
+Attribute *a;
+Color c1 = {{ 0.4627,0.42352,0.39215 }};
+Color c2 = {{ 0.356, 0.266, 0.145 }};
 
 void my_pyramid(){
   glBegin( GL_TRIANGLES );
@@ -48,8 +51,29 @@ void my_pyramid(){
 
 
 void sim_setup( void ){
-  b = building_new();
-  building_init( b, 13, 13, 21, 1 );
+  b = building_new(); 
+  a = attribute_new();
+  //building_init( b, 13, 13, 21, 1 );
+  /*
+  Color_copy(&a->secondary, &a->primary);
+  Color_copy(&a->primary, &c1);
+  a->winDiv[0] = 3;
+  a->winDiv[1] = 1;
+  a->ks = 0;
+  building_setup( b, 7, 9, 13, 1, 3, 3, 4, a );*/
+  /*
+  Color_copy(&a->secondary, &c2);
+  a->winDiv[0] = 3;
+  a->winDiv[1] = 2;
+  a->ks = 0;
+  building_setup( b, 21, 17, 13, 1, 7, 5, 4, a );*/
+  Color_copy(&a->secondary, &a->primary);
+  Color_copy(&a->primary, &c1);
+  a->winDiv[0] = 3;
+  a->winDiv[1] = 2;
+  a->corniceNum = 4;
+  a->ks = 1;
+  building_setup( b, 15, 17, 27, 1, 3, 3, 4, a );
   building_partition( b );
 }
 
@@ -288,6 +312,7 @@ void keyboard(unsigned char key, int x, int y){
   switch( key) {
   case 'q': // quit
     building_delete( b );
+    attribute_delete( a );
     exit(0);
     break;
   case 'a':

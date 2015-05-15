@@ -133,7 +133,7 @@ void building_setup( Building *b, int w, int d, int h, int roof,
 
   wdh[0] = (float)w/((float)(b->cols));
   wdh[1] = (float)d/((float)(b->rows));
-  wdh[2] = (float)h/((float)(b->floors));
+  wdh[2] = (float)(h-1)/((float)(b->floors));
 
   xyz[0] = 0.0;
   xyz[1] = 0.0;
@@ -153,35 +153,35 @@ void building_setup( Building *b, int w, int d, int h, int roof,
       for(r = 0; r < b->rows; r++){
 	xyz[0] = wdh[0]*c;
 	xyz[1] = wdh[2]*l;
-	xyz[2] = wdh[1]*r;
+	xyz[2] = -wdh[1]*r;
 	rc[0] = r;
 	rc[1] = c;
 	if(r == 0){
 	  dir[0] = 0;
 	  dir[1] = 0;
 	  dir[2] = 1;
-	  ll_add( b->active, shape_new( "F", xyz, wdh, rc, l, NULL, dir));
+	  ll_add( b->active, shape_new( "F", xyz, wdh, rc, l, a, dir));
 	  counter++;
 	}
 	if(r == b->rows-1){
 	  dir[0] = 0;
 	  dir[1] = 0;
 	  dir[2] = -1;
-	  ll_add( b->active, shape_new( "F", xyz, wdh, rc, l, NULL, dir));
+	  ll_add( b->active, shape_new( "F", xyz, wdh, rc, l, a, dir));
 	  counter++;
 	}
 	if(c == 0){
 	  dir[0] = -1;
 	  dir[1] = 0;
 	  dir[2] = 0;
-	  ll_add( b->active, shape_new( "F", xyz, wdh, rc, l, NULL, dir));
+	  ll_add( b->active, shape_new( "F", xyz, wdh, rc, l, a, dir));
 	  counter++;
 	}
 	if(c == b->cols-1){
 	  dir[0] = 1;
 	  dir[1] = 0;
 	  dir[2] = 0;
-	  ll_add( b->active, shape_new( "F", xyz, wdh, rc, l, NULL, dir));
+	  ll_add( b->active, shape_new( "F", xyz, wdh, rc, l, a, dir));
 	  counter++;
 	}
       }
