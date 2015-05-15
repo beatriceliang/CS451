@@ -363,136 +363,7 @@ void building_partition( Building *b ){
 	    ll_add( b->design, shape_new( "WALL", xyz, wdh, s->rc, s->floor, 
 					  s->a, s->dir ) );
 	   
-	    /******************************************/
-	    /*******DOESN'T ACTUALLY BELONG HERE*******/
-	    /*********WITH ACTUAL WINDOW PLACEMENT*****/
-	    /******************************************/
-	    if(s->dir[0] == 0){
-	      //top frame
-	      xyz[0] = s->xyz[0] + s->wdh[0]*2.0/7.0;
-	      xyz[1] = s->xyz[1] + s->wdh[2]*0.75;
-	      wdh[0] = s->wdh[0]*3.0/7.0;
-	      wdh[1] = 0.25;
-	      wdh[2] = 0.0;
-	      dir[0] = 0;
-	      dir[1] = -1;
-	      dir[2] = 0;
-	      if(s->dir[2] == 1)
-		xyz[2] = s->xyz[2];
-	      else
-		xyz[2] = s->xyz[2] - s->wdh[1] + 0.25;
-	      ll_add( b->design, shape_new( "WALL", xyz, wdh, s->rc, s->floor, 
-					    s->a, dir ) );
-	      //bottom frame 
-	      xyz[1] = s->xyz[1];
-	      wdh[2] = s->wdh[2]/4.0;
-	      dir[1] = 1;
-	      if(s->dir[2] == 1)
-		xyz[2] = s->xyz[2];
-	      else
-		xyz[2] = s->xyz[2] - s->wdh[1] + 0.25;
-	      ll_add( b->design, shape_new( "WALL", xyz, wdh, s->rc, s->floor, 
-					    s->a, dir ) );
-	      //left frame
-	      xyz[0] = s->xyz[0];
-	      xyz[1] = s->xyz[1] + wdh[2];
-	      wdh[0] = s->wdh[0]*2.0/7.0;
-	      wdh[1] = 0.25;
-	      wdh[2] = wdh[2]*2;
-	      dir[1] = 0;
-	      dir[0] = 1;
-	      if(s->dir[2] == 1)
-		xyz[2] = s->xyz[2];
-	      else
-		xyz[2] = s->xyz[2] - s->wdh[1] + 0.25;
-	      ll_add( b->design, shape_new( "WALL", xyz, wdh, s->rc, s->floor, 
-					    s->a, dir ) );
 
-	      //right frame
-	      xyz[0] = xyz[0] + s->wdh[0]*5.0/7.0;
-	      dir[0] = -1;
-	      if(s->dir[2] == 1)
-		xyz[2] = s->xyz[2];
-	      else
-		xyz[2] = s->xyz[2] - s->wdh[1] + 0.25;
-	      ll_add( b->design, shape_new( "WALL", xyz, wdh, s->rc, s->floor, 
-					    s->a, dir ) );
-	    }
-	    else{
-	      //top frame  
-	      xyz[1] = s->xyz[1] + s->wdh[2]*0.75;
-	      xyz[2] = s->xyz[2] - (s->wdh[1]*2.0/7.0);
-	      wdh[0] = 0.25;
-	      wdh[1] = s->wdh[1]*3.0/7.0;
-	      wdh[2] = 0.0;
-	      dir[0] = 0;
-	      dir[1] = -1;
-	      dir[2] = 0;
-	      if(s->dir[0] == 1)
-		xyz[0] = s->xyz[0] + s->wdh[0] - 0.25;
-	      else
-		xyz[0] = s->xyz[0];
-	      ll_add( b->design, shape_new( "WALL", xyz, wdh, s->rc, s->floor, 
-					    s->a, dir ) );
-	      
-	      //bottom frame 
-	      xyz[1] = s->xyz[1];
-	      wdh[2] = s->wdh[2]/4.0;
-	      dir[1] = 1;
-	      if(s->dir[0] == 1)
-		xyz[0] = s->xyz[0] + s->wdh[0] - 0.25;
-	      else
-		xyz[0] = s->xyz[0] ;
-	      ll_add( b->design, shape_new( "WALL", xyz, wdh, s->rc, s->floor, 
-					    s->a, dir ) );
-	      //left frame
-	      xyz[2] = s->xyz[2];
-	      xyz[1] = s->xyz[1] + (s->wdh[2]*0.25);
-	      wdh[0] = 0.25;
-	      wdh[1] = s->wdh[1]*2.0/7.0;
-	      wdh[2] = s->wdh[2]*0.5;
-	      dir[1] = 0;
-	      dir[2] = -1;
-	      if(s->dir[0] == 1)
-		xyz[0] = s->xyz[0] + s->wdh[0] - 0.25;
-	      else
-		xyz[0] = s->xyz[0];
-	      ll_add( b->design, shape_new( "WALL", xyz, wdh, s->rc, s->floor, 
-					    s->a, dir ) );
-	      
-	      //right frame
-	      xyz[2] = xyz[2] - s->wdh[1]*5.0/7.0;
-	      dir[2] = 1;
-	      if(s->dir[0] == 1)
-		xyz[0] = s->xyz[0] + s->wdh[0] - 0.25;
-	      else
-		xyz[0] = s->xyz[0];
-	      ll_add( b->design, shape_new( "WALL", xyz, wdh, s->rc, s->floor, 
-	      s->a, dir ) );
-	    }	      
-	   
-	    /******************************************/
-	    /*******DOESN'T ACTUALLY BELONG HERE*******/
-	    /*********WITH ACTUAL WINDOW PLACEMENT*****/
-	    /*****************ENDS HERE****************/
-	    /******************************************/
-	    /*
-	    if(s->dir[2] == 0){
-	      wdh[0] = s->wdh[0];
-	      wdh[1] = 3.0*s->wdh[1]/7.0;
-	    }
-	    else{
-	      wdh[0] = 3.0*s->wdh[0]/7.0;
-	      wdh[1] = s->wdh[1];
-	    }
-
-	    wdh[2] = wdh[2]/4.0;
-	    xyz[0] = s->xyz[0] + ((2.0*s->wdh[0]/7.0)*s->dir[2]*s->dir[2]);
-	    xyz[2] = s->xyz[2] - ((2.0*s->wdh[1]/7.0)*s->dir[0]*s->dir[0]);
-	    ll_add( b->design, shape_new( "WALL", xyz, wdh, s->rc, s->floor, 
-					  s->a, s->dir ) );
-
-	    */
 	    xyz[0] = s->xyz[0] + ((2.0*s->wdh[0]/7.0)*s->dir[2]*s->dir[2]);
 	    xyz[1] = s->xyz[1] + s->wdh[2]*0.75;
 	    xyz[2] = s->xyz[2] - ((2.0*s->wdh[1]/7.0)*s->dir[0]*s->dir[0]);
@@ -774,7 +645,7 @@ void building_partition( Building *b ){
 						   s->a, s->dir ) );
 		 
 		    }
-		}
+		  }
 		  
 		  //physical door
 		  Color_copy( &s->a->primary, &s->a->wood );
@@ -794,13 +665,137 @@ void building_partition( Building *b ){
 		  ll_add(b->design, shape_new( "WALL", xyz, wdh, s->rc, s->floor, 
 					       s->a, s->dir ) );
 		  
-		  
 		  shape_delete(s);
 		  s = ll_pop(b->active);
 		}
 		else{
-		  shape_delete(s);
-		  s = ll_pop(b->active);
+		  if( strcmp( s->symbol, "WIN" ) == 0 ){
+
+		    if(s->dir[0] == 0){
+		      
+		      //top frame
+		      xyz[0] = s->xyz[0];
+		      xyz[1] = s->xyz[1]+s->wdh[2];
+		      wdh[0] = s->wdh[0];
+		      wdh[1] = 0.20;
+		      wdh[2] = 0.0;
+		      dir[0] = 0;
+		      dir[1] = -1;
+		      dir[2] = 0;
+		      if(s->dir[2] == 1)
+			xyz[2] = s->xyz[2]+0.20;
+		      else
+			xyz[2] = s->xyz[2] - s->wdh[1];
+		      ll_add( b->design, shape_new( "WALL", xyz, wdh, s->rc, s->floor, 
+		      				    s->a, dir ) );
+		      
+		      
+		      //bottom frame 
+		      xyz[1] = s->xyz[1] - s->wdh[2];
+		      wdh[2] = s->wdh[2];
+		      dir[1] = 1;
+		      if(s->dir[2] == 1)
+			xyz[2] = s->xyz[2] + 0.20;
+		      else
+			xyz[2] = s->xyz[2] - s->wdh[1];
+		      ll_add( b->design, shape_new( "WALL", xyz, wdh, s->rc, s->floor, 
+						    s->a, dir ) );
+		    
+		    
+		      //left frame
+		      xyz[0] = s->xyz[0] - s->wdh[0];
+		      xyz[1] = s->xyz[1];
+		      wdh[0] = s->wdh[0];
+		      wdh[1] = 0.20;
+		      dir[1] = 0;
+		      dir[0] = 1;
+		      if(s->dir[2] == 1)
+			xyz[2] = s->xyz[2] + 0.20;
+		      else
+			xyz[2] = s->xyz[2] - s->wdh[1];
+		      ll_add( b->design, shape_new( "WALL", xyz, wdh, s->rc, s->floor, 
+		      			    s->a, dir ) );
+	      
+		      //right frame
+		      xyz[0] = s->xyz[0] + s->wdh[0];
+		      dir[0] = -1;
+		      if(s->dir[2] == 1)
+			xyz[2] = s->xyz[2] + 0.20;
+		      else
+			xyz[2] = s->xyz[2] - s->wdh[1];
+		      ll_add( b->design, shape_new( "WALL", xyz, wdh, s->rc, s->floor, 
+		      				    s->a, dir ) );
+
+		      Color Blue = { { 0.32, 0.734, 0.969 } };
+		      Color_copy( &s->a->primary, &Blue );
+		      ll_add( b->design, shape_new( "WALL", s->xyz, s->wdh, s->rc, s->floor, 
+		      				    s->a, s->dir ) );
+		    }
+		    else{
+		      //top frame  
+		      xyz[1] = s->xyz[1] + s->wdh[2];
+		      xyz[2] = s->xyz[2];
+		      wdh[0] = 0.20;
+		      wdh[1] = s->wdh[1];
+		      wdh[2] = 0.0;
+		      dir[0] = 0;
+		      dir[1] = -1;
+		      dir[2] = 0;
+		      if(s->dir[0] == 1)
+			xyz[0] = s->xyz[0] + s->wdh[0];
+		      else
+			xyz[0] = s->xyz[0] - 0.20;
+		      ll_add( b->design, shape_new( "WALL", xyz, wdh, s->rc, s->floor, 
+						    s->a, dir ) );
+		      
+		      //bottom frame 
+		      xyz[1] = s->xyz[1] - s->wdh[2];
+		      wdh[2] = s->wdh[2];
+		      dir[1] = 1;
+		      if(s->dir[0] == 1)
+			xyz[0] = s->xyz[0] + s->wdh[0];
+		      else
+			xyz[0] = s->xyz[0] - 0.20;
+		      ll_add( b->design, shape_new( "WALL", xyz, wdh, s->rc, s->floor, 
+						    s->a, dir ) );
+		      //left frame
+		      xyz[2] = s->xyz[2] + s->wdh[1];
+		      xyz[1] = s->xyz[1];
+		      wdh[0] = 0.20;
+		      wdh[1] = s->wdh[1];
+		      wdh[2] = s->wdh[2];
+		      dir[1] = 0;
+		      dir[2] = -1;
+		      if(s->dir[0] == 1)
+			xyz[0] = s->xyz[0] + s->wdh[0];
+		      else
+			xyz[0] = s->xyz[0] - 0.2;
+		      ll_add( b->design, shape_new( "WALL", xyz, wdh, s->rc, s->floor, 
+						    s->a, dir ) );
+		      
+		      //right frame
+		      xyz[2] = s->xyz[2] - s->wdh[1];
+		      dir[2] = 1;
+		      if(s->dir[0] == 1)
+			xyz[0] = s->xyz[0] + s->wdh[0];
+		      else
+			xyz[0] = s->xyz[0] - 0.2;
+		      ll_add( b->design, shape_new( "WALL", xyz, wdh, s->rc, s->floor, 
+		      				    s->a, dir ) );
+
+		      Color Blue = { { 0.32, 0.734, 0.969 } };
+		      Color_copy( &s->a->primary, &Blue );
+		      ll_add( b->design, shape_new( "WALL", s->xyz, s->wdh, s->rc, s->floor, 
+		      				    s->a, s->dir ) );
+		    }	      
+		     
+		    shape_delete(s);
+		    s = ll_pop(b->active);
+		  }
+		  else{
+		    shape_delete(s);
+		    s = ll_pop(b->active);
+		  }
 		}
 	      }
 	    }
