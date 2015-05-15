@@ -28,6 +28,12 @@ Building *building_new( void ){
   return b;
 }
 
+/* sets the door at specified row, column combination */
+void building_setDoor( Building *b, int *rc ){
+  b->doorBlock[0] = rc[0];
+  b->doorBlock[1] = rc[1];
+}
+
 /* Divide into facades no less than 3x4x3's */
 void building_init( Building *b, int w, int d, int h, int roof ){
   float wdh[3];
@@ -56,6 +62,8 @@ void building_init( Building *b, int w, int d, int h, int roof ){
   dir[0] = 0;
   dir[1] = 1;
   dir[2] = 0;
+  b->doorBlock[0] = 1;
+
   ll_add( b->design, shape_new( "R", xyz, rwdh, rc, 0, attribute_new(), dir));
 
   for(l = 0; l < b->floors; l++){
@@ -103,6 +111,7 @@ void building_init( Building *b, int w, int d, int h, int roof ){
     if(l == 0)
       b->numFacade = counter;
   }
+
 }
 
 /* Divide up building by user specification */

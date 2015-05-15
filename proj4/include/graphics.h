@@ -57,6 +57,7 @@ typedef struct{
   int floors;
   int height; //height before roof
   int numFacade; //number of facade on first floor (used for random door)
+  int doorBlock[2]; //block door belongs to
 } Building;
 
 
@@ -84,6 +85,7 @@ Building *building_new( void );
 void building_init( Building *b, int w, int d, int h, int roof ); 
 void building_setup( Building *b, int w, int d, int h, int roof, 
 		     int width, int depth, int height, Attribute *a ); 
+void building_setDoor( Building *b, int *rc );
 void building_partition( Building *b );
 void building_delete( Building *b );
 #endif
