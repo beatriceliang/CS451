@@ -499,8 +499,30 @@ void building_partition( Building *b ){
 
 	    //has keystone
 	    if( s->a->ks == 1 && s->floor < 2){
-	      ll_add( b->active, shape_new( "KS", xyz, wdh, s->rc, s->floor, 
-	      s->a, dir ) );
+	      Color_copy( &s->a->primary, &s->a->secondary );
+	      xyz[1] = s->xyz[1] + s->wdh[2]*3.5/4.0;
+	      if(s->dir[2] == 1){
+		xyz[0] = s->xyz[0] + (s->wdh[0]/2);
+		xyz[2] = s->xyz[2];
+	      }
+	      if(s->dir[2] == -1){	       
+		xyz[0] = s->xyz[0] + (s->wdh[0]/2);
+		xyz[2] = s->xyz[2] - s->wdh[1];
+	      }
+	      if(s->dir[0] == 1){
+		xyz[0] = s->xyz[0] + s->wdh[0];
+		xyz[2] = s->xyz[2] - (s->wdh[1]/2);
+	      }
+	      if(s->dir[0] == -1){
+		xyz[0] = s->xyz[0];
+		xyz[2] = s->xyz[2] - (s->wdh[1]/2);
+	      }
+	      wdh[0] = s->wdh[0];
+	      wdh[1] = s->wdh[1];
+	      //height of keystone
+	      wdh[2] = s->wdh[2]/6;
+	      ll_add( b->design, shape_new( "KS", xyz, wdh, s->rc, s->floor, 
+					    s->a, s->dir ) );
 	    }
 	    shape_delete(s);
 	    s = ll_pop(b->active);

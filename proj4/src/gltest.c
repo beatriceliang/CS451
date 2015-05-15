@@ -19,6 +19,34 @@ double eyeAngle = 0.0;
 
 Building *b;
 
+void my_pyramid(){
+  glBegin( GL_TRIANGLES );
+  glVertex3f( 0.0f, 0.5f, 0.0f );
+  glVertex3f( 0.5f, -0.5f, 0.5f );
+  glVertex3f( 0.5f, -0.5f, -0.5f);
+  
+  glVertex3f( 0.0f, 0.5f, 0.0f );
+  glVertex3f( 0.5f, -0.5f, 0.5f );
+  glVertex3f( -0.5f, -0.5f, 0.5f);
+  
+  glVertex3f( 0.0f, 0.5f, 0.0f );
+  glVertex3f( -0.5f, -0.5f, -0.5f );
+  glVertex3f( -0.5f, -0.5f, 0.5f);
+  
+  glVertex3f( 0.0f, 0.5f, 0.0f );
+  glVertex3f( -0.5f, -0.5f, -0.5f );
+  glVertex3f( 0.5f, -0.5f, -0.5f);
+  glEnd();
+
+  glBegin( GL_QUADS );
+  glVertex3f( 0.5f, -0.5f, 0.5f );
+  glVertex3f( -0.5f, -0.5f, 0.5f );
+  glVertex3f( -0.5f, -0.5f, -0.5f);
+  glVertex3f( 0.5f, -0.5f, -0.5f);
+  glEnd();
+}
+
+
 void sim_setup( void ){
   b = building_new();
   building_init( b, 14, 7, 17, 1 );
@@ -73,34 +101,45 @@ void shape_draw( Shape *s ){
     }
     glEnd();
   }
-  else if( strcmp(s->symbol, "PRISM") == 0 ){
-          glPushMatrix();
+  else{ 
+    if( strcmp(s->symbol, "PRISM") == 0 ){
+      glPushMatrix();
       glColor4f( s->a->primary.c[0],
-                s->a->primary.c[1],
-                s->a->primary.c[2], 1.0f );
-
+		 s->a->primary.c[1],
+		 s->a->primary.c[2], 1.0f );
+      
       if(s->dir[0]==1){
           glTranslatef(s->xyz[0]+s->wdh[0]/2, s->xyz[1]+s->wdh[2]/2, 
 		       s->xyz[2]-s->wdh[1]/2);
       }
       if(s->dir[0]==-1){
-          glTranslatef(s->xyz[0]-s->wdh[0]/2, s->xyz[1]+s->wdh[2]/2,
-		       s->xyz[2]-s->wdh[1]/2);
+	glTranslatef(s->xyz[0]-s->wdh[0]/2, s->xyz[1]+s->wdh[2]/2,
+		     s->xyz[2]-s->wdh[1]/2);
       }
       if(s->dir[2]==1){
-          glTranslatef(s->xyz[0]+s->wdh[0]/2, s->xyz[1]+s->wdh[2]/2, 
-		       s->xyz[2]+s->wdh[1]/2);
+	glTranslatef(s->xyz[0]+s->wdh[0]/2, s->xyz[1]+s->wdh[2]/2, 
+		     s->xyz[2]+s->wdh[1]/2);
       }
       if(s->dir[2]==-1){
-          glTranslatef(s->xyz[0]+s->wdh[0]/2, s->xyz[1]+s->wdh[2]/2, 
-		       s->xyz[2]-s->wdh[1]/2);
+	glTranslatef(s->xyz[0]+s->wdh[0]/2, s->xyz[1]+s->wdh[2]/2, 
+		     s->xyz[2]-s->wdh[1]/2);
       }
       glScalef(s->wdh[0],s->wdh[2], s->wdh[1]);
       glutSolidCube(1);
       glPopMatrix();
-  }
-  else{
+    }
+    else if( strcmp( s->symbol, "KS" ) == 0 ){
+      glPushMatrix();
+      glTranslatef( s->xyz[0], s->xyz[1]-(s->wdh[2]/6), s->xyz[2] );
+      //glRotated(30, 0, 1, 0);
+      glRotated(180, 1, 0, 0);
+      glScalef( s->wdh[2]*1.5, s->wdh[2], s->wdh[2] );
       
+      //glutSolidTetrahedron();
+      my_pyramid();
+      glPopMatrix();
+    }
+    
     //Numbers are BAD!!!
     /*
     glPushMatrix();
@@ -109,7 +148,6 @@ void shape_draw( Shape *s ){
     glutSolidCube(1);
     glPopMatrix(); 
     */
-    return;
   }
 }
 
