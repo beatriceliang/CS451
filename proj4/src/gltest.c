@@ -49,7 +49,7 @@ void my_pyramid(){
 
 void sim_setup( void ){
   b = building_new();
-  building_init( b, 14, 7, 17, 1 );
+  building_init( b, 13, 13, 21, 1 );
   building_partition( b );
 }
 
@@ -203,13 +203,6 @@ void display(void) {
   glLightfv(GL_LIGHT3, GL_POSITION, position3);
   
   draw_building();
-  s = ll_head( b->design );
-  glColor4f( 1.0f, 0.0f, 0.0f, 1.0f );
-  glPushMatrix();
-  glTranslatef( s->wdh[0]/2.0, 16.5, -s->wdh[1]/2.0);
-  glScalef(s->wdh[0], s->wdh[2], s->wdh[1]);
-  glutSolidCube(1);
-  glPopMatrix(); 
   
   // draw everything
   glFlush();
