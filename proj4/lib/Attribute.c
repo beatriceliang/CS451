@@ -53,7 +53,7 @@ void attribute_copy( Attribute *to, Attribute *from ){
   Color_copy( &to->secondary, &from->secondary );
   Color_copy( &to->primary, &from->primary );
   to->winDiv[0] = from->winDiv[0];
-  from->winDiv[1] = from->winDiv[1];
+  to->winDiv[1] = from->winDiv[1];
   to->ratio = from->ratio;
 }
 

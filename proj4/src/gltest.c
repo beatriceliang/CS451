@@ -182,7 +182,7 @@ void display(void) {
   GLfloat position3[] = { 100, 70, -100, 1.0};
   
   Shape *s;
-    // clear screen
+  // clear screen
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
   glColor4f(1.0, 1.0, 1.0, 1.0);
   
@@ -268,7 +268,7 @@ void init(void) {
   // specific light source
   glLightfv(GL_LIGHT0, GL_DIFFUSE, diffuse);
   glLightfv(GL_LIGHT0, GL_SPECULAR, specular );
-   glLightfv(GL_LIGHT1, GL_DIFFUSE, diffuse);
+  glLightfv(GL_LIGHT1, GL_DIFFUSE, diffuse);
   glLightfv(GL_LIGHT1, GL_SPECULAR, specular );
   glLightfv(GL_LIGHT2, GL_DIFFUSE, diffuse);
   glLightfv(GL_LIGHT2, GL_SPECULAR, specular );

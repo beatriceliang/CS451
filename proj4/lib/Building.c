@@ -197,7 +197,7 @@ void building_partition( Building *b ){
   float xyz[3];
   float wdh[3];
   int dir[3];
-
+  int h, v;
   s = ll_pop( b->active );
   i = 0;
   srand(time(NULL));
@@ -726,10 +726,41 @@ void building_partition( Building *b ){
 		      ll_add( b->design, shape_new( "WALL", xyz, wdh, s->rc, s->floor, 
 		      				    s->a, dir ) );
 
-		      Color Blue = { { 0.32, 0.734, 0.969 } };
-		      Color_copy( &s->a->primary, &Blue );
-		      ll_add( b->design, shape_new( "WALL", s->xyz, s->wdh, s->rc, s->floor, 
-		      				    s->a, s->dir ) );
+		      Color_copy( &s->a->primary, &s->a->wood );
+		      if(s->dir[2] != 0){
+			for(h = 1; h <= s->a->winDiv[0]; h++){
+			  if(s->dir[2] == -1)
+			    xyz[2] = s->xyz[2] - s->wdh[1];
+			  else
+			    xyz[2] = s->xyz[2];
+			  xyz[0] = s->xyz[0];
+			  xyz[1] = s->xyz[1] + (s->wdh[2]/(s->a->winDiv[0]+1))*h - 0.1;	  
+			  wdh[0] = s->wdh[0];
+			  wdh[1] = 0.1;
+			  wdh[2] = 0.1;
+			  dir[0] = s->dir[0];
+			  dir[1] = s->dir[1];
+			  dir[2] = s->dir[2];
+			  ll_add( b->design, shape_new( "PRISM", xyz, wdh, s->rc, s->floor, 
+							s->a, dir ) );
+			}
+			for(v = 1; v <= s->a->winDiv[1]; v++){
+			  if(s->dir[2] == -1)
+			    xyz[2] = s->xyz[2] - s->wdh[1];
+			  else
+			    xyz[2] = s->xyz[2];
+			  xyz[0] = s->xyz[0] + (s->wdh[0]/(s->a->winDiv[1]+1))*v - 0.1;
+			  xyz[1] = s->xyz[1];
+			  wdh[0] = 0.1;
+			  wdh[1] = 0.1;
+			  wdh[2] = s->wdh[2];
+			  dir[0] = s->dir[0];
+			  dir[1] = s->dir[1];
+			  dir[2] = s->dir[2];
+			  ll_add( b->design, shape_new( "PRISM", xyz, wdh, s->rc, s->floor, 
+							s->a, dir ) );
+			}
+		      }
 		    }
 		    else{
 		      //top frame  
@@ -783,12 +814,12 @@ void building_partition( Building *b ){
 		      ll_add( b->design, shape_new( "WALL", xyz, wdh, s->rc, s->floor, 
 		      				    s->a, dir ) );
 
-		      Color Blue = { { 0.32, 0.734, 0.969 } };
-		      Color_copy( &s->a->primary, &Blue );
-		      ll_add( b->design, shape_new( "WALL", s->xyz, s->wdh, s->rc, s->floor, 
-		      				    s->a, s->dir ) );
+		      
 		    }	      
-		     
+		    Color Glass = { { 0.879, 0.910, 0.988 } };
+		    Color_copy( &s->a->primary, &Glass );
+		    ll_add( b->design, shape_new( "WALL", s->xyz, s->wdh, s->rc, s->floor, 
+		    			  s->a, s->dir ) );
 		    shape_delete(s);
 		    s = ll_pop(b->active);
 		  }
