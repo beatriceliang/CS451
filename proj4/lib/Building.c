@@ -103,7 +103,6 @@ void building_init( Building *b, int w, int d, int h, int roof ){
     if(l == 0)
       b->numFacade = counter;
   }
-  printf("exiting building_init\n");
 }
 
 /* Divide up building by user specification */
@@ -135,6 +134,9 @@ void building_setup( Building *b, int w, int d, int h, int roof,
   dir[0] = 0;
   dir[1] = 1;
   dir[2] = 0;
+  if(a->winDiv[0] == 0 && a->winDiv[1] == 0)
+    a->ks = 1;
+
   ll_add( b->design, shape_new( "R", xyz, rwdh, rc, 0, a, dir));
 
   for(l = 0; l < b->floors; l++){
@@ -497,6 +499,90 @@ void building_partition( Building *b ){
 	    ll_add( b->design, shape_new( "WALL", xyz, wdh, s->rc, s->floor, 
 					  s->a, s->dir ) );
 
+	    wdh[2] = wdh[2]*2;
+	    //bind window to top and bottom
+	    if((s->dir[2] == 0 && wdh[1]/wdh[2] > s->a->ratio) || 
+	       (s->dir[0] == 0 && wdh[0]/wdh[2] > s->a->ratio) ){
+	      if(s->dir[2] == 0){
+		wdh[0] = s->wdh[0]; 
+		wdh[1] = ((s->wdh[1]*3.0/7.0) - (s->a->ratio*s->wdh[2]*0.5))*0.5;
+	      }
+	      else{
+		wdh[0] = ((s->wdh[0]*3.0/7.0) - (s->a->ratio*s->wdh[2]*0.5))*0.5;
+		wdh[1] = s->wdh[1];
+	      }
+	      xyz[0] = s->xyz[0] + ((s->wdh[0]*2.0/7.0)*s->dir[2]*s->dir[2]);
+	      xyz[1] = s->xyz[1] + s->wdh[2]*0.25;
+	      xyz[2] = s->xyz[2] - ((s->wdh[1]*2.0/7.0)*s->dir[0]*s->dir[0]);
+	      wdh[2] = s->wdh[2]*0.5;
+	      ll_add( b->design, shape_new( "WALL", xyz, wdh, s->rc, s->floor, 
+	      				    s->a, s->dir ) );
+	      xyz[0] = s->xyz[0] + (((5.0*s->wdh[0]/7.0) - wdh[0])*s->dir[2]*s->dir[2]);
+	      xyz[1] = s->xyz[1] + s->wdh[2]*0.25;
+	      xyz[2] = s->xyz[2] - (((5.0*s->wdh[1]/7.0) - wdh[1])*s->dir[0]*s->dir[0]);
+	      ll_add( b->design, shape_new( "WALL", xyz, wdh, s->rc, s->floor, 
+	      				    s->a, s->dir ) );
+	      //add the window
+	      xyz[0] = s->xyz[0] + (((s->wdh[0]*2.0/7.0)+wdh[0])*s->dir[2]*s->dir[2]) - (0.2*s->dir[0]);
+	      xyz[1] = s->xyz[1] + s->wdh[2]*0.25;
+	      xyz[2] = s->xyz[2] - (((s->wdh[1]*2.0/7.0)+wdh[1])*s->dir[0]*s->dir[0]) - (0.2*s->dir[2]);
+	      wdh[2] = s->wdh[2]*0.5;
+	      if(s->dir[0] == 0){
+		wdh[0] = s->a->ratio*s->wdh[2]*0.5;
+		wdh[1] = s->wdh[1];
+		ll_add( b->active, shape_new( "WIN", xyz, wdh, s->rc, s->floor, 
+					      s->a, s->dir ) );
+	      }
+	      else{
+		wdh[0] = s->wdh[0];
+		wdh[1] = s->a->ratio*s->wdh[2]*0.5;
+		ll_add( b->active, shape_new( "WIN", xyz, wdh, s->rc, s->floor, 
+					      s->a, s->dir ) );
+	      }
+	    }
+	    
+	    //bind window to left and right
+	    if((s->dir[2] == 0 && wdh[1]/wdh[2] < s->a->ratio) || 
+	       (s->dir[0] == 0 && wdh[0]/wdh[2] < s->a->ratio) ){
+	      if(s->dir[2] == 0){
+		wdh[0] = s->wdh[0]; 
+		wdh[1] = s->wdh[1]*3.0/7.0;
+		wdh[2] = ((s->wdh[2]*0.5) - ((1.0/s->a->ratio)*s->wdh[1]*0.5))*0.5;
+	      }
+	      else{
+		wdh[0] = s->wdh[0]*3.0/7.0;
+		wdh[1] = s->wdh[1];
+		wdh[2] = ((s->wdh[2]*0.5) - ((1.0/s->a->ratio)*s->wdh[1]*0.5))*0.5;
+	      }
+	      xyz[0] = s->xyz[0] + ((s->wdh[0]*2.0/7.0)*s->dir[2]*s->dir[2]);
+	      xyz[1] = s->xyz[1] + s->wdh[2]*0.25;
+	      xyz[2] = s->xyz[2] - ((s->wdh[1]*2.0/7.0)*s->dir[0]*s->dir[0]);
+	      ll_add( b->design, shape_new( "WALL", xyz, wdh, s->rc, s->floor, 
+	      				    s->a, s->dir ) );
+	      xyz[1] = s->xyz[1] + s->wdh[2]*0.75-wdh[2];
+	      ll_add( b->design, shape_new( "WALL", xyz, wdh, s->rc, s->floor, 
+	      				    s->a, s->dir ) );
+	      
+	      //add the window
+	      xyz[0] = s->xyz[0] + ((s->wdh[0]*2.0/7.0)*s->dir[2]*s->dir[2]) - (0.2*s->dir[0]);
+	      xyz[1] = s->xyz[1] + s->wdh[2]*0.25 + wdh[2];
+	      xyz[2] = s->xyz[2] - ((s->wdh[1]*2.0/7.0)*s->dir[0]*s->dir[0]) - (0.2*s->dir[2]);
+	      wdh[2] = (1.0/s->a->ratio)*s->wdh[1]*0.5;
+	      if(s->dir[0] == 0){
+		wdh[0] = s->wdh[0]*3.0/7.0;
+		wdh[1] = s->wdh[1];
+		ll_add( b->active, shape_new( "WIN", xyz, wdh, s->rc, s->floor, 
+					      s->a, s->dir ) );
+	      }
+	      else{
+		wdh[0] = s->wdh[0];
+		wdh[1] = s->wdh[1]*3.0/7.0;
+		ll_add( b->active, shape_new( "WIN", xyz, wdh, s->rc, s->floor, 
+					      s->a, s->dir ) );
+	      }
+	    }
+	    
+
 	    //has keystone
 	    if( s->a->ks == 1 && s->floor < 2){
 	      Color_copy( &s->a->primary, &s->a->secondary );
@@ -714,7 +800,6 @@ void building_partition( Building *b ){
       }
     }
   }
-  printf(" Existing partition\n");
 }
 
 /* Frees memory of the fields of building and itself */

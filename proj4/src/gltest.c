@@ -133,7 +133,7 @@ void shape_draw( Shape *s ){
       glTranslatef( s->xyz[0], s->xyz[1]-(s->wdh[2]/6), s->xyz[2] );
       //glRotated(30, 0, 1, 0);
       glRotated(180, 1, 0, 0);
-      glScalef( s->wdh[2]*1.5, s->wdh[2], s->wdh[2] );
+      glScalef( s->wdh[2]*2, s->wdh[2], s->wdh[2]*2 );
       
       //glutSolidTetrahedron();
       my_pyramid();

@@ -16,9 +16,8 @@ typedef struct{
   int ks; //0 if no keystone
   int corniceNum; //number of layers (prisms)
   int bWindow; // 0 if no band window
-  int balc; // 0 if no balcony
   int winDiv[2]; //horizontal and vertical divider
-  float ratio[2]; //range of acceptable window length to height ratio
+  float ratio; //window length to height ratio
   Color primary;
   Color secondary;
   Color wood;

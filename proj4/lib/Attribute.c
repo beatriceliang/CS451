@@ -32,11 +32,9 @@ Attribute *attribute_new( void ){
   a->primary.c[0] = 0.691; 
   a->primary.c[1] = 0.539;
   a->primary.c[2] = 0.426;
-  a->winDiv[0] = 0;
-  a->winDiv[1] = 0;
-  a->ratio[0] = 2.0/3.0;
-  a->ratio[1] = 2.0/3.0;
-  a->balc = 0;
+  a->winDiv[0] = 2;
+  a->winDiv[1] = 1;
+  a->ratio = 4.0/3.0;
   return a;
 }
 
@@ -56,8 +54,7 @@ void attribute_copy( Attribute *to, Attribute *from ){
   Color_copy( &to->primary, &from->primary );
   to->winDiv[0] = from->winDiv[0];
   from->winDiv[1] = from->winDiv[1];
-  to->ratio[0] = from->ratio[0];
-  to->balc = from->balc;
+  to->ratio = from->ratio;
 }
 
 /* Frees memory of the fields of attribute and itself */
