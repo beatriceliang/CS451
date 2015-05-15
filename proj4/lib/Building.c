@@ -514,140 +514,177 @@ void building_partition( Building *b ){
 	      shape_delete(s);
 	      s = ll_pop(b->active);
 	    }
-	    //To Be Continued
 	    else{
-	      if( strcmp( s->symbol, "DOOR") == 0 ){
-		//frame of door
+	      //divide cornice into sublayers
+	      if( strcmp( s->symbol, "CORNICE") == 0 ){
 		Color_copy( &s->a->primary, &s->a->secondary );
-		if(s->dir[0] == 0){
-		  xyz[0] = s->xyz[0];
-		  xyz[1] = s->xyz[1];
-		  if(s->dir[2] == -1)
-		    xyz[2] = s->xyz[2] - s->wdh[1] + 0.1;
-		    else
-		    xyz[2] = s->xyz[2]-0.1;
-		  wdh[0] = s->wdh[0]/10;
-		  wdh[1] = 0.2;
-		  wdh[2] = s->wdh[2];
-		  ll_add(b->design, shape_new( "PRISM", xyz, wdh, s->rc, s->floor, 
-					    s->a, s->dir ) );
-		  xyz[0] = s->xyz[0] + 9*wdh[0];
-		  ll_add(b->design, shape_new( "PRISM", xyz, wdh, s->rc, s->floor, 
-					       s->a, s->dir ) );
-		  xyz[0] = s->xyz[0];
-		  xyz[1] = s->xyz[1] + s->wdh[2] - (s->wdh[0]/10);
-		  wdh[0] = s->wdh[0];
-		  wdh[2] = s->wdh[0]/10;
-		  ll_add(b->design, shape_new( "PRISM", xyz, wdh, s->rc, s->floor, 
-					       s->a, s->dir ) );
-		}
-		else{
-		  xyz[1] = s->xyz[1];
-		  xyz[2] = s->xyz[2];
-		  if(s->dir[0] == 1)
-		    xyz[0] = s->xyz[0]+s->wdh[0] - 0.1;
-		  else
-		    xyz[0] = s->xyz[0] + 0.1;
-		  wdh[0] = 0.2;
-		  wdh[1] = s->wdh[1]/10;
-		  wdh[2] = s->wdh[2];
-		  ll_add(b->design, shape_new( "PRISM", xyz, wdh, s->rc, s->floor, 
-					    s->a, s->dir ) );
-		  xyz[2] = s->xyz[2] - 9*wdh[1];
-		  ll_add(b->design, shape_new( "PRISM", xyz, wdh, s->rc, s->floor, 
-					       s->a, s->dir ) );
-		  xyz[2] = s->xyz[2];
-		  xyz[1] = s->xyz[1] + s->wdh[2] - (s->wdh[1]/10);
-		  wdh[2] = s->wdh[1]/10;
-		  wdh[1] = s->wdh[1];
-		  ll_add(b->design, shape_new( "PRISM", xyz, wdh, s->rc, s->floor, 
-					       s->a, s->dir ) );
-		}
-
-		//see if the door has steps
-		if(s->a->step == 1){
+		for( i = 0; i < s->a->corniceNum; i++){
 		  if(s->dir[0] == 0){
-		    xyz[0] = s->xyz[0] + (s->wdh[0]/10);
-		    xyz[1] = s->xyz[1];
+		    xyz[0] = s->xyz[0] - ((i+1)*0.15);
+		    xyz[1] = s->xyz[1] + s->wdh[2]*(i)/s->a->corniceNum;
 		    if(s->dir[2] == -1)
 		      xyz[2] = s->xyz[2] - s->wdh[1];
 		    else
 		      xyz[2] = s->xyz[2];
-		    wdh[0] = s->wdh[0]*0.8;
-		    wdh[1] = 0.20;
-		    wdh[2] = 0.60;
+		    wdh[0] = s->wdh[0] + ((i+1)*0.30);
+		    wdh[1] = 0.15*(i+1);
+		    wdh[2] = s->wdh[2] - s->wdh[2]*(i)/s->a->corniceNum;
 		    ll_add(b->design, shape_new( "PRISM", xyz, wdh, s->rc, s->floor, 
 						 s->a, s->dir ) );
-		    if(s->dir[2] == -1)
-		      xyz[2] = xyz[2] - 0.20;
+		  }
+		  else{ 
+		    if(s->dir[0] == 1)
+		      xyz[0] = s->xyz[0]+s->wdh[0];
 		    else
-		      xyz[2] = s->xyz[2] + 0.20;
-		    wdh[2] = 0.40;
+		      xyz[0] = s->xyz[0];
+		    xyz[1] = s->xyz[1] + s->wdh[2]*(i)/s->a->corniceNum;
+		    xyz[2] = s->xyz[2] + ((i+1)*0.15);
+		    wdh[0] = 0.15*(i+1);
+		    wdh[1] = s->wdh[1] + ((i+1)*0.30);
+		    wdh[2] = s->wdh[2] - s->wdh[2]*(i)/s->a->corniceNum;
 		    ll_add(b->design, shape_new( "PRISM", xyz, wdh, s->rc, s->floor, 
 						 s->a, s->dir ) );
+		  }
+		}
+		shape_delete(s);
+		s = ll_pop(b->active);
+
+	      }
+
+	      else{
+		if( strcmp( s->symbol, "DOOR") == 0 ){
+		  //frame of door
+		  Color_copy( &s->a->primary, &s->a->secondary );
+		  if(s->dir[0] == 0){
+		    xyz[0] = s->xyz[0];
+		    xyz[1] = s->xyz[1];
 		    if(s->dir[2] == -1)
-		      xyz[2] = xyz[2] - 0.20;
+		      xyz[2] = s->xyz[2] - s->wdh[1] + 0.1;
 		    else
-		      xyz[2] = s->xyz[2] + 0.20;
-		    wdh[2] = 0.20;
+		      xyz[2] = s->xyz[2]-0.1;
+		    wdh[0] = s->wdh[0]/10;
+		    wdh[1] = 0.2;
+		    wdh[2] = s->wdh[2];
+		    ll_add(b->design, shape_new( "PRISM", xyz, wdh, s->rc, s->floor, 
+						 s->a, s->dir ) );
+		    xyz[0] = s->xyz[0] + 9*wdh[0];
+		    ll_add(b->design, shape_new( "PRISM", xyz, wdh, s->rc, s->floor, 
+						 s->a, s->dir ) );
+		    xyz[0] = s->xyz[0];
+		    xyz[1] = s->xyz[1] + s->wdh[2] - (s->wdh[0]/10);
+		    wdh[0] = s->wdh[0];
+		    wdh[2] = s->wdh[0]/10;
 		    ll_add(b->design, shape_new( "PRISM", xyz, wdh, s->rc, s->floor, 
 						 s->a, s->dir ) );
 		  }
 		  else{
 		    xyz[1] = s->xyz[1];
-		    xyz[2] = s->xyz[2] - (s->wdh[1]/10);
+		    xyz[2] = s->xyz[2];
 		    if(s->dir[0] == 1)
-		      xyz[0] = s->xyz[0]+s->wdh[0];
+		      xyz[0] = s->xyz[0]+s->wdh[0] - 0.1;
 		    else
-		      xyz[0] = s->xyz[0];
-		    wdh[0] = 0.20;
-		    wdh[1] = s->wdh[1]*0.8;
-		    wdh[2] = 0.60;
+		      xyz[0] = s->xyz[0] + 0.1;
+		    wdh[0] = 0.2;
+		    wdh[1] = s->wdh[1]/10;
+		    wdh[2] = s->wdh[2];
 		    ll_add(b->design, shape_new( "PRISM", xyz, wdh, s->rc, s->floor, 
 						 s->a, s->dir ) );
-		    if(s->dir[0] == 1)
-		      xyz[0] = xyz[0] + 0.20;
-		    else
-		      xyz[0] = xyz[0] - 0.20;
-		    wdh[2] = 0.40;
+		    xyz[2] = s->xyz[2] - 9*wdh[1];
 		    ll_add(b->design, shape_new( "PRISM", xyz, wdh, s->rc, s->floor, 
-						 s->a, s->dir ) );
-		    if(s->dir[0] == 1)
-		      xyz[0] = xyz[0] + 0.20;
-		    else
-		      xyz[0] = xyz[0] - 0.20;
-		    wdh[2] = 0.20;
+					       s->a, s->dir ) );
+		    xyz[2] = s->xyz[2];
+		    xyz[1] = s->xyz[1] + s->wdh[2] - (s->wdh[1]/10);
+		    wdh[2] = s->wdh[1]/10;
+		    wdh[1] = s->wdh[1];
 		    ll_add(b->design, shape_new( "PRISM", xyz, wdh, s->rc, s->floor, 
-						 s->a, s->dir ) );
-		 
+					       s->a, s->dir ) );
 		  }
+		  
+		  //see if the door has steps
+		  if(s->a->step == 1){
+		    if(s->dir[0] == 0){
+		      xyz[0] = s->xyz[0] + (s->wdh[0]/10);
+		      xyz[1] = s->xyz[1];
+		      if(s->dir[2] == -1)
+			xyz[2] = s->xyz[2] - s->wdh[1];
+		      else
+			xyz[2] = s->xyz[2];
+		      wdh[0] = s->wdh[0]*0.8;
+		      wdh[1] = 0.20;
+		      wdh[2] = 0.60;
+		      ll_add(b->design, shape_new( "PRISM", xyz, wdh, s->rc, s->floor, 
+						   s->a, s->dir ) );
+		      if(s->dir[2] == -1)
+		      xyz[2] = xyz[2] - 0.20;
+		      else
+			xyz[2] = s->xyz[2] + 0.20;
+		      wdh[2] = 0.40;
+		      ll_add(b->design, shape_new( "PRISM", xyz, wdh, s->rc, s->floor, 
+						   s->a, s->dir ) );
+		      if(s->dir[2] == -1)
+			xyz[2] = xyz[2] - 0.20;
+		      else
+			xyz[2] = s->xyz[2] + 0.20;
+		      wdh[2] = 0.20;
+		      ll_add(b->design, shape_new( "PRISM", xyz, wdh, s->rc, s->floor, 
+						   s->a, s->dir ) );
+		    }
+		    else{
+		      xyz[1] = s->xyz[1];
+		      xyz[2] = s->xyz[2] - (s->wdh[1]/10);
+		      if(s->dir[0] == 1)
+			xyz[0] = s->xyz[0]+s->wdh[0];
+		      else
+		      xyz[0] = s->xyz[0];
+		      wdh[0] = 0.20;
+		      wdh[1] = s->wdh[1]*0.8;
+		      wdh[2] = 0.60;
+		      ll_add(b->design, shape_new( "PRISM", xyz, wdh, s->rc, s->floor, 
+						   s->a, s->dir ) );
+		      if(s->dir[0] == 1)
+		      xyz[0] = xyz[0] + 0.20;
+		      else
+			xyz[0] = xyz[0] - 0.20;
+		      wdh[2] = 0.40;
+		      ll_add(b->design, shape_new( "PRISM", xyz, wdh, s->rc, s->floor, 
+						   s->a, s->dir ) );
+		      if(s->dir[0] == 1)
+			xyz[0] = xyz[0] + 0.20;
+		      else
+			xyz[0] = xyz[0] - 0.20;
+		      wdh[2] = 0.20;
+		      ll_add(b->design, shape_new( "PRISM", xyz, wdh, s->rc, s->floor, 
+						   s->a, s->dir ) );
+		 
+		    }
 		}
-
-		//physical door
-		Color_copy( &s->a->primary, &s->a->wood );
-		xyz[0] = s->xyz[0] + ((s->wdh[0]/10)*s->dir[2]*s->dir[2]);
-		xyz[1] = s->xyz[1];
-		xyz[2] = s->xyz[2] - ((s->wdh[1]/10)*s->dir[0]*s->dir[0]);
-		if(s->dir[0] == 0){
-		  wdh[0] = s->wdh[0]*0.8;
-		  wdh[1] = s->wdh[1];
+		  
+		  //physical door
+		  Color_copy( &s->a->primary, &s->a->wood );
+		  xyz[0] = s->xyz[0] + ((s->wdh[0]/10)*s->dir[2]*s->dir[2]);
+		  xyz[1] = s->xyz[1];
+		  xyz[2] = s->xyz[2] - ((s->wdh[1]/10)*s->dir[0]*s->dir[0]);
+		  if(s->dir[0] == 0){
+		    wdh[0] = s->wdh[0]*0.8;
+		    wdh[1] = s->wdh[1];
 		  wdh[2] = s->wdh[2] - (s->wdh[0]/10);
+		  }
+		  else{
+		    wdh[0] = s->wdh[0];
+		    wdh[1] = s->wdh[1]*0.8;
+		    wdh[2] = s->wdh[2] - (s->wdh[1]/10);
+		  }
+		  ll_add(b->design, shape_new( "WALL", xyz, wdh, s->rc, s->floor, 
+					       s->a, s->dir ) );
+		  
+		  
+		  shape_delete(s);
+		  s = ll_pop(b->active);
 		}
 		else{
-		  wdh[0] = s->wdh[0];
-		  wdh[1] = s->wdh[1]*0.8;
-		  wdh[2] = s->wdh[2] - (s->wdh[1]/10);
+		  shape_delete(s);
+		  s = ll_pop(b->active);
 		}
-		ll_add(b->design, shape_new( "WALL", xyz, wdh, s->rc, s->floor, 
-					     s->a, s->dir ) );
-		
-		  
-		shape_delete(s);
-		s = ll_pop(b->active);
-	      }
-	      else{
-		shape_delete(s);
-		s = ll_pop(b->active);
 	      }
 	    }
 	  }
