@@ -496,7 +496,7 @@ void building_partition( Building *b ){
 	  }
 	  else{
 	    //divide balcony into tiny windows if true
-	    if( strcmp( s->symbol, "BAND" ) == 0 && s->a->bWindow == 0 ){
+	    if( strcmp( s->symbol, "BAND" ) == 0 ){
 	      ll_add( b->design, shape_new( "WALL", s->xyz, s->wdh, s->rc, s->floor, 
 					    s->a, s->dir ) );
 	      shape_delete(s);

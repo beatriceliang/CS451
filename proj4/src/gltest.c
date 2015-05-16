@@ -70,8 +70,9 @@ void sim_setup( void ){
   Color_copy(&a->secondary, &a->primary);
   Color_copy(&a->primary, &c1);
   a->winDiv[0] = 3;
-  a->winDiv[1] = 2;
+  a->winDiv[1] = 1;
   a->corniceNum = 4;
+  a->ratio = 0.3;
   a->ks = 1;
   building_setup( b, 15, 17, 27, 1, 3, 3, 4, a );
   building_partition( b );

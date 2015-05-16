@@ -15,7 +15,6 @@ typedef struct{
   int step; // 0 if no step
   int ks; //0 if no keystone
   int corniceNum; //number of layers (prisms)
-  int bWindow; // 0 if no band window
   int winDiv[2]; //horizontal and vertical divider
   float ratio; //window length to height ratio
   Color primary;

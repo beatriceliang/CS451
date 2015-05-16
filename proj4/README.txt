@@ -38,18 +38,8 @@ Given, lower left corner of cube, these are 4 coords of shape (in order, LL, LR,
 
 Active Symbols: F/F1 (facade/flr1/2 facade), CORNICE (cornice, 1 or 2 layer), DOOR, 
 	STEP (steps), WIN, BAND
-Terminal Symbol: BWIN (tiny band window), WALL(2D terminal), PRISM(3D terminal), 
-	KS (keystone), WINDOW
+Terminal Symbol: WALL(2D terminal), PRISM(3D terminal), KS (keystone), WINDOW
 
-Things to do:
-In Attribute:
-	- build an attribute library with preset attributes
-	- attribute matching function takes in the attribute library and an attribute and 
-	returns the attribute of shape of best fit 
-
-Symbols Needing matching:
-Do attribute matching for window.
-Given a range of window length to height ration, have several options of frame diver options
 
 
 

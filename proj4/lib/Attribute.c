@@ -22,7 +22,6 @@ Attribute *attribute_new( void ){
   a->step = 1;
   a->ks = 1;
   a->corniceNum = 2;
-  a->bWindow = 0;
   a->wood.c[0] = 0.395; 
   a->wood.c[1] = 0.168;
   a->wood.c[2] = 0.0;
@@ -48,7 +47,6 @@ void attribute_copy( Attribute *to, Attribute *from ){
   to->step = from->step;
   to->ks = from->ks;
   to->corniceNum = from->corniceNum;
-  to->bWindow = from->bWindow;
   Color_copy( &to->wood, &from->wood );
   Color_copy( &to->secondary, &from->secondary );
   Color_copy( &to->primary, &from->primary );
